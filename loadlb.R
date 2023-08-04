@@ -28,6 +28,15 @@ library(GenomicAlignments)
 library(Biostrings)
 library(rtracklayer)
 library(GenomicFeatures)
+library(bedtoolsr)
+library(tidytext)
+library(ComplexHeatmap)
+library(circlize)
+library(doParallel)
+library(edgeR)
+
+
+
 
 
 
