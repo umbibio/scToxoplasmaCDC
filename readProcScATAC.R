@@ -416,21 +416,6 @@ ggsave(filename="../Output/toxo_cdc/ME49_59/figures_paper/RPL34_track_pileup_by_
        dpi = 300
 )
 
-# p3 <- DimPlot(object = Tg_ATAC, label = TRUE, reduction = 'tsne') + NoLegend()
-# 
-# ggsave(filename="../Output/scClockFigs/tsne_clusters.pdf",
-#        plot=p3,
-#        width = 5, height = 5,
-#        units = "in", # other options are "in", "cm", "mm"
-#        dpi = 300
-# )
-
-
-
-##
-
-
-
 
 
 singleGRange <- GRanges(as.data.frame(GRangesList(regions)))
@@ -502,12 +487,6 @@ p1 <- FeaturePlot(
 
 plot(p1)
 
-# ggsave(filename="../Output/scClockFigs/RON2_ATAC_activity.pdf",
-#        plot=p1,
-#        width = 5, height = 5,
-#        units = "in", # other options are "in", "cm", "mm"
-#        dpi = 300
-# )
 
 
 Idents(Tg_ATAC) <- 'phase'
@@ -524,22 +503,6 @@ p2 <- CoveragePlot(
 )
 
 plot(p2)
-ggsave(filename="../Output/scClockFigs/RON2_track_pileup_by_phase.pdf",
-       plot=p2,
-       width = 5, height = 6,
-       units = "in", # other options are "in", "cm", "mm"
-       dpi = 300
-)
-
-
-# p3 <- DimPlot(object = Tg_ATAC, label = TRUE, reduction = 'tsne') + NoLegend()
-# 
-# ggsave(filename="../Output/scClockFigs/tsne_clusters.pdf",
-#        plot=p3,
-#        width = 5, height = 5,
-#        units = "in", # other options are "in", "cm", "mm"
-#        dpi = 300
-# )
 
 
 saveRDS(Tg_ATAC, '../Input/scClock/Tg_ATAC.RData')
