@@ -93,21 +93,3 @@ S.Os <- lapply(1:length(S.Os), function(i){
 
 saveRDS(S.Os[[1]], '../Input_KZ/toxo_cdc/rds_ME49_59/S.O.intra_lables.rds')
 
-## plot 
-Idents(S.Os[[1]]) <- 'phase'
-levels(S.Os[[1]]) <- c("G1.a", "G1.b", "S", "M", "C")
-
-p <- DimPlot(S.Os[[1]], reduction = "pca", 
-             pt.size = 1,
-             label = F, label.size = 4) + 
-  theme(panel.spacing = unit(0.5, "lines")) + 
-  theme(axis.text.x = element_text(face="bold", size=12, angle=0)) +
-  theme(axis.text.y = element_text(face="bold", size=12, angle=0)) +
-  theme(
-    axis.title.x = element_text(size=14, face="bold"),
-    axis.title.y = element_text(size=14, face="bold"),
-    plot.title = element_text(size = 18, face = "bold.italic")
-  )
-
-
-p <- plot(p)+ ggtitle("scRNA")
