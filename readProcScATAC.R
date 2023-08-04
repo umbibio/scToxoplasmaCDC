@@ -68,7 +68,7 @@ seqinfo(tx_trans)
 
 saveRDS(tx_trans, "../Input_KZ/toxo_cdc/rds_ME49_59/ME49_tx_trans_granges.rds")
 
-## Now read scATAC data from cellranger 
+## read scATAC data from cellranger 
 counts <- Read10X_h5(filename = "../Input/toxo_scATAC_MJ_ME49_59/filtered_peak_bc_matrix.h5")
 metadata <- read.csv(
   file = "../Input/toxo_scATAC_MJ_ME49_59/singlecell.csv",
