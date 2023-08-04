@@ -1,19 +1,6 @@
-library(Seurat)
-library(openxlsx)
-library(ggplot2)
-library(ggfortify)
-library(jcolors)
-require(gridExtra)
-library(grid)
-library(matrixStats)
-library(tidyverse)
-library(RColorBrewer)
-library(parallel)
-library(openxlsx)
-library(plotly)
-
 
 source('./util_funcs.R')
+source('./loadlb.R')
 
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
