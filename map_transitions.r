@@ -57,24 +57,24 @@ getCurvePeakLoc <- function(t, y, prob = 0.8){
 
 ## Read in the data.
 ## IDs
-prod.desc  <- read.xlsx('../Input/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 prod.desc <- left_join(prod.desc, TGGT1_ME49, by = c('GeneID' = 'TGGT1'))
 
-marker.genes <- readRDS('../Input/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
+marker.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
 marker.genes.phase <- marker.genes %>% transmute(GeneID = gene, phase = cluster) %>% distinct()
 
 
-sc.rna.spline.fits <- readRDS('../Input/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
-sc.atac.spline.fits <- readRDS('../Input/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
+sc.rna.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
+sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
 ## Filter to include markers only
 sc.rna.spline.fits <- sc.rna.spline.fits %>% dplyr::filter(GeneID %in% marker.genes$gene)
 sc.atac.spline.fits <- sc.atac.spline.fits %>% dplyr::filter(GeneID %in% marker.genes$gene)
 
 
-rna_sub <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
-atac_sub <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
+atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 
 
 ## Turn the data into wide format (time by gene) and center & scale each gene
@@ -166,7 +166,7 @@ L.trans.atac$transition.points$y[L.trans.atac$transition.points$y > 6] <- 6
 L.trans.atac$transition.points$y <- L.trans.atac$transition.points$y[-c(3,5,7)]
 L.trans.atac$transition.points$x <- L.trans.atac$transition.points$x[-c(3,5,7)]
 
-saveRDS(L.trans.atac, '../Input/toxo_cdc/rds_ME49_59/atac_based_transition_points_v2.rds')
+saveRDS(L.trans.atac, '../Input_sub/toxo_cdc/rds_ME49_59/atac_based_transition_points_v2.rds')
 
 ## plot the spline fitted to peak time of expression (only marker genes)
 ## add the transition points as vertical lines
@@ -176,9 +176,38 @@ atac_peaks.dat <- L.trans.atac$spline.fit.peaks.smooth %>%
   transmute(g = x, y = s0, yp = s1) %>% pivot_longer(-g, names_to = 'drivs', values_to = 'value')
 atac_peaks.dat$value[atac_peaks.dat$value < 0] <- 0
 atac_peaks.dat$value[atac_peaks.dat$value > 6] <- 6
-
-
 atac_peaks.dat$drivs <- factor(atac_peaks.dat$drivs, levels = c('y', 'yp'))
+
+
+p1  <- ggplot(atac_peaks.dat, aes(x= g,y=value)) +
+  geom_path(aes(color = drivs),alpha = 0.8, size = 1)+ 
+  theme_bw(base_size = 14) +
+  geom_vline(xintercept=L.trans.atac$transition.points$x, linetype=2, color = 'orange', size = 0.6) + 
+  ylab('peak time') + xlab('genes') +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
+  theme(strip.background = element_rect(colour="black", fill="white",
+                                        size=0.5, linetype="solid")) +
+  theme(strip.text = element_text(size = 14, face="bold", angle = 0)) + 
+  
+  
+  facet_grid(drivs~., scales = 'free') +
+  
+  #ggtitle(titles[i]) +
+  theme(
+    plot.title = element_text(size=14, face = "bold.italic", color = 'red'),
+    axis.title.x = element_text(size=14, face="bold", hjust = 1),
+    axis.title.y = element_text(size=14, face="bold")
+  ) + 
+  theme(#legend.position = c(0.15, 0.85),
+    legend.position = 'none',
+    legend.title = element_text(colour="black", size=12, 
+                                face="bold"),
+    legend.text = element_text(colour="black", size=12, 
+                               face="bold"))
+
+
+plot(p1)
 
 
 
@@ -191,7 +220,47 @@ L.trans.rna$transition.points$y[L.trans.rna$transition.points$y > 6] <- 6
 L.trans.rna$transition.points$y <- L.trans.rna$transition.points$y[-2]
 L.trans.rna$transition.points$x <- L.trans.rna$transition.points$x[-2]
 
-saveRDS(L.trans.rna, '../Input/toxo_cdc/rds_ME49_59/rna_based_transition_points_v2.rds')
+saveRDS(L.trans.rna, '../Input_sub/toxo_cdc/rds_ME49_59/rna_based_transition_points_v2.rds')
+
+## plot the spline fitted to peak time of accessibility (only marker genes)
+## add the transition points as vertical lines
+
+rna_peaks.dat <- L.trans.rna$spline.fit.peaks.smooth %>% 
+  transmute(g = x, y = s0, yp = s1) %>% pivot_longer(-g, names_to = 'drivs', values_to = 'value')
+rna_peaks.dat$value[rna_peaks.dat$value < 0] <- 0
+rna_peaks.dat$value[rna_peaks.dat$value > 6] <- 6
+
+
+rna_peaks.dat$drivs <- factor(rna_peaks.dat$drivs, levels = c('y', 'yp'))
+p2  <- ggplot(rna_peaks.dat, aes(x= g,y=value)) +
+  geom_path(aes(color = drivs),alpha = 0.8, size = 1)+ 
+  theme_bw(base_size = 14) +
+  geom_vline(xintercept=L.trans.rna$transition.points$x, linetype=2, color = 'orange', size = 0.6) + 
+  ylab('peak time') + xlab('genes') +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
+  theme(strip.background = element_rect(colour="black", fill="white",
+                                        size=0.5, linetype="solid")) +
+  theme(strip.text = element_text(size = 14, face="bold", angle = 0)) + 
+  
+  
+  facet_grid(drivs~., scales = 'free') +
+  
+  #ggtitle(titles[i]) +
+  theme(
+    plot.title = element_text(size=14, face = "bold.italic", color = 'red'),
+    axis.title.x = element_text(size=14, face="bold", hjust = 1),
+    axis.title.y = element_text(size=14, face="bold")
+  ) + 
+  theme(#legend.position = c(0.15, 0.85),
+    legend.position = 'none',
+    legend.title = element_text(colour="black", size=12, 
+                                face="bold"),
+    legend.text = element_text(colour="black", size=12, 
+                               face="bold"))
+
+
+plot(p2)
 
 
 ## Add transition time  to the meta data (according to transition time and cell cycle phase)
@@ -226,6 +295,49 @@ atac_sub@meta.data$transition.atac <- factor(t.atac.over.atac, levels = sort(uni
 
 
 
-saveRDS(rna_sub, '../Input/toxo_cdc/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
+saveRDS(rna_sub, '../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
 saveRDS(atac_sub, '../Input/toxo_cdc/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
+
+
+## plot for test
+rna_sub@reductions[["pca"]]@cell.embeddings[,2] <- -1 * rna_sub@reductions[["pca"]]@cell.embeddings[,2]
+
+Idents(rna_sub) <- 'phase'
+p1 <- DimPlot(rna_sub, reduction = 'pca', label = T) + NoLegend()
+p1
+
+Idents(rna_sub) <- 'transition.atac'
+p2 <- DimPlot(rna_sub, reduction = 'pca', label = T) + NoLegend()
+p2
+
+Idents(rna_sub) <- 'transition.rna'
+p3 <- DimPlot(rna_sub, reduction = 'pca', label = T) + NoLegend()
+p3
+
+pp <- p1|p2|p3
+pp
+
+
+## rna
+Idents(rna_sub) <- 'transition.rna'
+p4 <- DimPlot(rna_sub, reduction = 'pca', dims = c(2,3), label = T) + NoLegend()
+p5 <- p1|p2|p3|p4
+
+
+p <- p1|p3
+
+## atac
+atac_sub@reductions[["pca"]]@cell.embeddings[,2] <- -1 * atac_sub@reductions[["pca"]]@cell.embeddings[,2]
+
+Idents(atac_sub) <- 'phase'
+p1 <- DimPlot(atac_sub, reduction = 'pca', label = T) + NoLegend()
+p1
+
+Idents(atac_sub) <- 'transition.atac'
+p2 <- DimPlot(atac_sub, reduction = 'pca', label = T) + NoLegend()
+p2
+
+p1 | p2 
+
+
 
