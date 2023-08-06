@@ -22,10 +22,10 @@ source('./util_funcs.R')
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 ## Splines
-sc.rna.spline.fits <- readRDS('../Input_KZ/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
-sc.atac.spline.fits <- readRDS('../Input_KZ/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
+sc.rna.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
+sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
-cyclic.genes <- readRDS('../Input_KZ/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
+cyclic.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
 cyclic.genes <- cyclic.genes %>% dplyr::filter(rna.cyclic == 1 & atac.cyclic == 1)
 
 #marker.genes <- readRDS('../Input_YR/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
@@ -52,8 +52,8 @@ sc.atac.mu.scale <- sc.atac.dtw.wide %>%
 
 
 ## Filter to include markers only
-#sc.rna.mu.scale <- sc.rna.mu.scale %>% dplyr::filter(GeneID %in% marker.genes$gene)
-#sc.atac.mu.scale <- sc.atac.mu.scale %>% dplyr::filter(GeneID %in% marker.genes$gene)
+# sc.rna.mu.scale <- sc.rna.mu.scale %>% dplyr::filter(GeneID %in% marker.genes$gene)
+# sc.atac.mu.scale <- sc.atac.mu.scale %>% dplyr::filter(GeneID %in% marker.genes$gene)
 
 ## Filter to include cyclic
 sc.rna.mu.scale <- sc.rna.mu.scale %>% dplyr::filter(GeneID %in% cyclic.genes$GeneID)
@@ -74,7 +74,7 @@ cc.dat <- mclapply(1:length(genes), function(i){
 
 cc.dat <- data.frame(GeneID = genes, Lags = unlist(lapply(cc.dat, `[[`, 1)), ccs = unlist(lapply(cc.dat, `[[`, 2)))
 
-saveRDS(cc.dat, '../Input_KZ//toxo_cdc/rds_ME49_59/sc_rna_sc_atac_cross_cor_lag.rds')
+#saveRDS(cc.dat, '../Input_KZ//toxo_cdc/rds_ME49_59/sc_rna_sc_atac_cross_cor_lag.rds')
 p <- ggplot(cc.dat, aes(x = ccs)) + 
   geom_histogram(aes(y = ..density..),
                  colour = 1, fill = "white") +
@@ -87,20 +87,17 @@ p <- ggplot(cc.dat, aes(x = ccs)) +
   ggtitle("scRNA & scATAC cross-correlation")
 
 p
-ggsave("../Output/toxo_cdc/ME49_59/figures/sc_rna_sc_atac_cross_corr_lag.png", 
-       plot = p, height = 6, width = 6, dpi = 300)
-
 
 sum(cc.dat$ccs > 0.6) / nrow(cc.dat)
 
 ## Correlation to gene families
 
 ## IDs
-prod.desc  <- read.xlsx('../Input_YR/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input_YR/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub//toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 ## New
-gene.fam <- read.xlsx("../Input/toxo_cdc/gene_families/gene_fam_KZ.xlsx")
+gene.fam <- read.xlsx("../Input_sub/Toxo_genomics/gene_families/gene_fam_KZ.xlsx")
 gene.fam <- left_join(gene.fam, TGGT1_ME49, by = c('GeneID' = 'TGGT1'))
 gene.fam$cc <- cc.dat$ccs[match(gsub('_', '-', gene.fam$TGME49), cc.dat$GeneID)]
 
@@ -135,10 +132,5 @@ p <- ggplot(data = gene.fam, aes(x = Family, y = cc, color = Family)) +
 
 
 p
-
-ggsave(filename='../Output_KZ/figures/cc_gene_fam.pdf',
-       plot=p,
-       width = 6, height = 6,
-       units = "in")
 
 
