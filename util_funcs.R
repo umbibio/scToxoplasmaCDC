@@ -1174,3 +1174,34 @@ makeMatchedHeatMap <- function(matched.mat, prod.desc, cut.level = 4){
   return(L)
 }
 
+plot_rna_atac_trends.ord <- function(sc.rna.sc.atac.joint.long.sub){
+  p  <- ggplot(sc.rna.sc.atac.joint.long.sub, aes(x= time,y=normExpr)) +
+    geom_path(aes(color = GeneID),alpha = 0.8, size = 0.8)+ 
+    theme_bw() +
+    #theme_bw(base_size = 16) +
+    theme(legend.position = "right") +
+    ylab('normExpr') + xlab('Time') +
+    theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 22, face="bold", colour = "black")) +
+    theme(axis.text.y = element_text(angle = 0, hjust = 1, size = 18, face="bold", colour = "black")) +
+    theme(strip.background = element_rect(colour="black", fill="white",size=0.5, linetype="solid")) +
+    theme(strip.text = element_text(size = 22, face="bold", angle = 0)) + 
+    
+    coord_cartesian(xlim = c(0,6.5)) + 
+    facet_grid(cluster.RNA.ordered ~ data, scales = 'free', space = 'free') +
+    theme(
+      plot.title = element_text(size=20, face = "bold.italic", color = 'red'),
+      axis.title.x = element_text(size=22, face="bold", hjust = 1),
+      axis.title.y = element_text(size=22, face="bold")
+    ) + 
+    theme(#legend.position = c(0.15, 0.85),
+      legend.position = 'none',
+      legend.title = element_text(colour="black", size=12, 
+                                  face="bold"),
+      legend.text = element_text(colour="black", size=12, 
+                                 face="bold"))
+  
+  
+  return(p)
+  
+}
+
