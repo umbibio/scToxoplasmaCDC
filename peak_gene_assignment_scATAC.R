@@ -11,7 +11,7 @@ source('./loadlb.R')
 
 ##### ATAC peak Regions in bed format 
 
-Tg_ATAC <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O_ATAC_peak.rds')
+Tg_ATAC <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_ATAC_peak.rds')
 
 peak.regions <- data.frame(ATAC_peak_region = rownames(Tg_ATAC@assays$peaks@data))
 peak.regions <- peak.regions %>% filter(!grepl("KE.*", ATAC_peak_region))
@@ -21,11 +21,11 @@ peaks.all.sort <- peak.regions.bed  %>% dplyr::select(X1, X3, X4) %>%  arrange(X
 names(peaks.all.sort) <- c("V1", "V2", "V3")
 peaks.all.sort$V4 <- paste(paste(peaks.all.sort$V1, peaks.all.sort$V2, sep = ":"),peaks.all.sort$V3 ,sep = "-" )
 
-saveRDS(peaks.all.sort, "../Input/toxo_cdc/rds_ME49_59/atac_peaks.rds")
+saveRDS(peaks.all.sort, "../Input_sub/toxo_cdc/rds_ME49_59/atac_peaks.rds")
 
 #### gtf file 
 
-gtf.file <- "../Input/Genomes/ToxoDB-59_TgondiiME49.gtf"
+gtf.file <- "../Input_sub/Genomes/ToxoDB-59_TgondiiME49.gtf"
 gtf <- read.table(gtf.file, header = F, sep = '\t', quote = NULL)
 gtf.filt <- gtf %>% dplyr::filter(!grepl('KE.*', V1))
 
@@ -67,8 +67,6 @@ gtf.filt.trn <- gtf.filt %>% filter(V3 == "transcript")
 gtf.filt.trn$gene_name <- gsub("\\;.*", "", gsub("transcript_id ", "", gsub("-t.*", "", gtf.filt.trn$V9)))
 gtf.filt.trn$gene_name <- gsub("\"", "", gtf.filt.trn$gene_name)
 
-write.table(gtf.filt.trn,"../Input/Genomes/ToxoDB-59_TgondiiME49_transcripts_filt.gtf",
-            sep = "\t", quote = F, row.names = F, col.names = F)
 
 ## Filter for first exon coordinates (exon1 coordinates)
 tmp.neg <- gtf.exon %>% filter(V7 == "-") %>% group_by(V9) %>%  dplyr::slice(which.max(V5))
@@ -113,14 +111,14 @@ peaks.genes.dist.trns.filt <- peaks.genes.dist.trns %>% dplyr::filter(abs(V16) <
 tmp <- peaks.genes.dist.trns.filt %>% group_by(V4.x) %>% summarise(total = length(unique(gene_name)))
 tmp.2 <- peaks.genes.dist.trns.filt %>% group_by(gene_name) %>% summarise(total = length(unique(V4.x)))
 
-write.xlsx(peaks.genes.dist.trns.filt, "../Input/toxo_scATAC_MJ_ME49_59/scATAC_peaks_genes_assigned.xlsx")
+write.xlsx(peaks.genes.dist.trns.filt, "../Input_sub/toxo_scATAC_MJ_ME49_59/scATAC_peaks_genes_assigned.xlsx")
 
 
 # prep bed format 
 # merge multiple peaks assigned to a single gene
 # the duplicated peaks are the bidirectioonal peaks 
 
-peak.genes <- read.xlsx("../Input/toxo_scATAC_MJ_ME49_59/scATAC_peaks_genes_assigned.xlsx")
+peak.genes <- read.xlsx("../Input_sub/toxo_scATAC_MJ_ME49_59/scATAC_peaks_genes_assigned.xlsx")
 peak.genes <- peak.genes %>% dplyr::select(V1.x, V2.x, V3.x, V11, gene_name) 
 peak.genes.bed.merged <- peak.genes %>% arrange(V2.x) %>% 
   group_by(gene_name) %>% mutate(start_peak = V2.x[which.min(V2.x)], end_peak = V3.x[which.max(V3.x)])  %>% 
@@ -132,17 +130,17 @@ peak.genes.bed.merged.bed <- peak.genes.bed.merged %>% dplyr::select(V1.x, start
 
 ## write peak gene assignment file in bed format without gene names and strand info 
 
-write.table(peak.genes.bed.merged.bed, "../Input/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.bed",
-            sep = "\t", quote = F, row.names = F, col.names = F)
-write.xlsx(peak.genes.bed.merged.bed, "../Input/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.xlsx")
-
-
-# only peaks iinformation to be loaded into IGV
-peak.merged.bed <- peak.genes.bed.merged.bed %>% 
-  ungroup() %>% dplyr::select(V1.x,start_peak, end_peak)
-
-
-write.table(peak.merged.bed, "../Input/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final_only_peaks.bed",
-            sep = "\t", quote = F, row.names = F, col.names = F)
-
+# write.table(peak.genes.bed.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.bed",
+#             sep = "\t", quote = F, row.names = F, col.names = F)
+# write.xlsx(peak.genes.bed.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.xlsx")
+# 
+# 
+# # only peaks iinformation to be loaded into IGV
+# peak.merged.bed <- peak.genes.bed.merged.bed %>% 
+#   ungroup() %>% dplyr::select(V1.x,start_peak, end_peak)
+# 
+# 
+# write.table(peak.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final_only_peaks.bed",
+#             sep = "\t", quote = F, row.names = F, col.names = F)
+# 
 
