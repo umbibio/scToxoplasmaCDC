@@ -46,7 +46,7 @@ rna.sig.markers.rna.trans <- rna.markers.rna.trans %>% dplyr::filter(avg_log2FC 
 dim(rna.sig.markers.rna.trans)
 length(unique(rna.sig.markers.rna.trans$GeneID))
 
-rna.sig.markers.rna.trans <- left_join(rna.sig.markers.rna.trans, prod.desc, by = c("gene" = "TGME49") )
+rna.sig.markers.rna.trans <- left_join(rna.sig.markers.rna.trans, prod.desc, by = c("GeneID" = "TGME49") )
 rna.sig.markers.rna.trans <- rna.sig.markers.rna.trans %>% 
   mutate(new.prod.desc = ifelse(ProductDescription == "hypothetical protein" & !is.na(new.name), new.name, ProductDescription))
 
@@ -56,6 +56,24 @@ ss.rna$num.DEG
 
 saveRDS(rna.sig.markers.rna.trans, '../Input_sub/toxo_cdc/rds_ME49_59/rna_markers_rna_trns_sig_v2.rds')
 
+
+
+
+rna.sig.markers.rna.trans <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/rna_markers_rna_trns_sig_v2.rds')
+rna.sig.markers.rna.trans <- rna.sig.markers.rna.trans %>%
+  mutate(Category = ifelse(str_detect(new.prod.desc, "hypothetical protein"), "hypo.", "others"))
+
+ss.rna <- rna.sig.markers.rna.trans %>% group_by(cluster, Category) %>% summarise(num.DEG = n())
+ss.rna$Color <- c(rep("#ff9a00", 2), rep("#9ca820", 2), rep("#615FB1", 2), rep("#8f139f", 2))
+
+ss.rna <- ss.rna %>%
+  mutate( ## for this you will need to remove the whitespace 
+    Category = stringr::str_trim(Category),
+    newcolor = ifelse(grepl("hypo", Category), alpha(Color, .5), Color)
+  ) 
+sum(ss.rna$num.DEG)
+
+saveRDS(ss.rna, "../Input_sub/toxo_cdc/rds_ME49_59/rna_markers_rna_trns_sig_v2_sum_plt.rds")
 
 
 
