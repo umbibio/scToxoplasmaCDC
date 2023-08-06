@@ -17,7 +17,7 @@ source('./loadlb.R')
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 ## Fit a pseudo-time curve and align using sync data
-S.O.integrated <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O.intra_atac_integrated.rds')
+S.O.integrated <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_integrated.rds')
 S.O.integrated@meta.data$Sample <- rownames(S.O.integrated@meta.data)
 Idents(S.O.integrated) <- 'orig.ident'
 
@@ -171,4 +171,12 @@ L <- list(sds.data = sds.data, genes.df = genes.df,
 L.rna <- L
 L.atac <- L
 
+saveRDS(L.rna$genes.df, '../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_genes_expr_pt.rds')
+saveRDS(L.atac$genes.df, '../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
+
+saveRDS(L.rna$sds.data, '../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_sds_data.rds')
+saveRDS(L.atac$sds.data, '../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_sds_data.rds')
+
+saveRDS(L.rna$S.O, '../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
+saveRDS(L.atac$S.O, '../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 
