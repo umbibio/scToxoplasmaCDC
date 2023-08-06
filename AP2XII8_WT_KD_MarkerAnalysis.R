@@ -28,71 +28,14 @@ library(plotly)
 
 source('./util_funcs.R')
 
-# individual data sets 
-
-## KD
-S.O.rna.KD <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
-Idents(S.O.rna.KD) <- "phase"
-DimPlot(S.O.rna.KD, reduction = "pca")
-
-umap.KD <- FetchData(object = S.O.rna.KD, vars = c("UMAP_1", "UMAP_2", "UMAP_3", "phase", "seurat_clusters"))
-umap.KD$phase<- factor(umap.KD$phase)
-plot_ly(umap.KD, 
-        x = ~UMAP_1, y = ~UMAP_2, z = ~UMAP_3,
-        color =  umap.KD$phase, 
-        colors = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05', 'M' = '#6f883a', 'C' = '#b138ee'),
-        size = 0.2)
-
-umap.KD$seurat_clusters<- factor(umap.KD$seurat_clusters)
-plot_ly(umap.KD, 
-        x = ~UMAP_1, y = ~UMAP_2, z = ~UMAP_3,
-        color =  umap.KD$seurat_clusters, 
-        colors = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05', 'M' = '#6f883a', 'C' = '#b138ee'),
-        size = 0.2)
-
-
-pca.KD <- FetchData(object = S.O.rna.KD, vars = c("PC_1", "PC_2", "PC_3", "phase", "seurat_clusters"))
-pca.KD$phase<- factor(pca.KD$phase)
-plot_ly(pca.KD, 
-        x = ~PC_1, y = ~PC_2, z = ~PC_3,
-        color =  pca.KD$phase, 
-        colors = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05', 'M' = '#6f883a', 'C' = '#b138ee'),
-        size = 0.2)
-
-
-
-## WT
-S.O.rna.WT <- readRDS("../Input/toxo_cdc/rds_ME49_59/S.O.rna.WT_labels.rds")
-Idents(S.O.rna.WT) <- "phase"
-DimPlot(S.O.rna.WT, reduction = 'umap')
-
-umap.WT <- FetchData(object = S.O.rna.WT, vars = c("UMAP_1", "UMAP_2", "UMAP_3", "phase"))
-umap.WT$phase <- factor(umap.WT$phase)
-plot_ly(umap.WT, 
-        x = ~UMAP_1, y = ~UMAP_2, z = ~UMAP_3,
-        color =  umap.WT$phase, 
-        colors = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05', 'M' = '#6f883a', 'C' = '#b138ee'),
-        size = 0.2)
-
-
-pca.WT <- FetchData(object = S.O.rna.WT, vars = c("PC_1", "PC_2", "PC_3", "phase"))
-pca.WT$phase <- factor(pca.WT$phase)
-plot_ly(pca.WT, 
-        x = ~PC_1, y = ~PC_2, z = ~PC_3,
-        color =  pca.WT$phase, 
-        colors = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05', 'M' = '#6f883a', 'C' = '#b138ee'),
-        size = 0.2)
-
-
-prod.desc  <- read.xlsx('../Input/toxo_genomics/genes/ProductDescription_GT1.xlsx')
 
 # new AP2XII-8 KD
-S.O.integrated <- readRDS("../Input/toxo_cdc/rds_ME49_59/S.O.integrated_rna_WT_AP2XII8KD_reference_rna_WT_transferred_lables_from_boot.rds")
+S.O.integrated <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/S.O.integrated_rna_WT_AP2XII8KD_reference_rna_WT_transferred_lables_from_boot.rds")
 
 
 ## subset RNA
 ## plotting using integrated object just fo testing
-## we use not integrated wt and KD for plotting 
+## we do not use integrated wt and KD for plotting 
 ## dont forget to set the default assay to RNA when performing DEG
 Idents(S.O.integrated) <- "new.spp"
 S.O.integrated.rna <- subset(S.O.integrated, ident = "scRNA")
@@ -107,10 +50,10 @@ DimPlot(S.O.integrated.rna, split.by = "orig.ident", reduction = "pca",
 ################################################################
 
 ##  description and name of genes which we add later to our genes of interest
-prod.desc  <- read.xlsx('../Input/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 prod.desc <- left_join(prod.desc, TGGT1_ME49, by = c("GeneID" = "TGGT1")) %>% na.omit()
-MJ_annot <- read.xlsx("../Input/Toxo_genomics/genes/MJ_annotation.xlsx")
+MJ_annot <- read.xlsx("../Input_sub/Toxo_genomics/genes/MJ_annotation.xlsx")
 MJ_annot <- MJ_annot %>% dplyr::select(!Product.Description)
 prod.desc <- left_join(prod.desc, MJ_annot, by= "TGME49" )
 prod.desc <- prod.desc %>% 
@@ -139,7 +82,7 @@ DEGs.KD.vs.WT.sig$dir[DEGs.KD.vs.WT.sig$cluster == "scRNA"] <- "activated"
 DEGs.KD.vs.WT.sig$dir[DEGs.KD.vs.WT.sig$cluster == "scRNA_KD"] <- "repressed" 
 
 DEGs.KD.vs.WT.sig.desc <- left_join(DEGs.KD.vs.WT.sig, prod.desc, by = c("GeneID" = "TGME49"))
-saveRDS(DEGs.KD.vs.WT.sig.desc, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.rds")
+saveRDS(DEGs.KD.vs.WT.sig.desc, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.rds")
 
 
 
@@ -148,10 +91,10 @@ DEGs.KD.vs.WT.sig.desc.wide <- DEGs.KD.vs.WT.sig.desc.wide %>%
   pivot_wider(GeneID, names_from = comparison, values_from = dir)
 
 write.xlsx(DEGs.KD.vs.WT.sig.desc, "../Output/toxo_cdc/ME49_59/tables/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.xlsx")
-saveRDS(DEGs.KD.vs.WT.sig.desc.wide, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5_wide.rds")
+saveRDS(DEGs.KD.vs.WT.sig.desc.wide, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5_wide.rds")
 
 ## bar plot
-DEGs.KD.vs.WT.sig.desc <- readRDS("../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.rds")
+DEGs.KD.vs.WT.sig.desc <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.rds")
 
 DEGs.KD.vs.WT.sig.sum <- DEGs.KD.vs.WT.sig.desc %>% 
   group_by(cluster, dir,Category) %>% summarise(num.deg = n()) 
@@ -249,12 +192,12 @@ KD.vs.WT.phase.marker.sig$dir[KD.vs.WT.phase.marker.sig$ref.spp == "scRNA_KD"] <
 
 KD.vs.WT.phase.marker.sig.desc <- left_join(KD.vs.WT.phase.marker.sig, prod.desc,
                                             by = c("GeneID" = "TGME49"))
-saveRDS(KD.vs.WT.phase.marker.sig.desc, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5.rds")
+saveRDS(KD.vs.WT.phase.marker.sig.desc, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5.rds")
 
 
 ## turn data to wide format 
 # assig up-regulated, down-regulated, modulated
-KD.vs.WT.phase.marker.sig.desc <- readRDS( "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5.rds")
+KD.vs.WT.phase.marker.sig.desc <- readRDS( "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5.rds")
 write.xlsx(KD.vs.WT.phase.marker.sig.desc, "../OutPut/toxo_cdc/ME49_59/tables/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5.xlsx")
 
 KD.vs.WT.phase.marker.sig.desc.wide <- KD.vs.WT.phase.marker.sig.desc %>% dplyr::select(GeneID, group, phase)
@@ -288,7 +231,7 @@ KD.vs.WT.phase.wide.desc <- KD.vs.WT.phase.wide.desc %>%
 KD.vs.WT.sum <- KD.vs.WT.phase.wide.desc %>% dplyr::select(GeneID, ProductDescription, Category, dir)  %>%
   group_by(dir,Category) %>% summarise(total = n()) 
 
-saveRDS(KD.vs.WT.phase.wide.desc, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5_WIDE.rds" )
+saveRDS(KD.vs.WT.phase.wide.desc, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5_WIDE.rds" )
 
 
 # global vs phase based
@@ -347,7 +290,7 @@ ggsave("../Output/toxo_cdc/ME49_59/figures_paper/AP2XII8_sig_markers_KD_vs_WT_ph
 
 ## marker analysis on buldging population
 
-S.O.rna.KD <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
+S.O.rna.KD <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
 Idents(S.O.rna.KD) <- "seurat_clusters"
 Idents(S.O.rna.KD) <- "phase"
 DimPlot(S.O.rna.KD, label = T, dims = c(1,3)) + ggtitle("scRNA_KD")
@@ -381,7 +324,7 @@ plot_ly(pca.KD,
 
 ## scRNA_KD:S1S2 vs scRNA_KD:S5
 
-S.O.integrated <- readRDS("../Input/toxo_cdc/rds_ME49_59/S.O.integrated_rna_WT_AP2XII8KD_reference_rna_WT_transferred_lables_from_boot.rds")
+S.O.integrated <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/S.O.integrated_rna_WT_AP2XII8KD_reference_rna_WT_transferred_lables_from_boot.rds")
 
 ## subset RNA
 Idents(S.O.integrated) <- "new.spp"
@@ -404,7 +347,7 @@ KD.S.phase.marker <- KD.S.phase.marker %>% mutate(dir = ifelse(avg_log2FC > 0 ,"
 KD.S.phase.marker.sig <- KD.S.phase.marker %>% dplyr::filter(abs(avg_log2FC) > log2(1.5) & p_val_adj < 0.01) 
 KD.S.phase.marker.sig <- left_join(KD.S.phase.marker.sig, prod.desc, by = c("GeneID" = "TGME49"))
 
-saveRDS(KD.S.phase.marker.sig, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_S5_up_down_reg_markers.rds")
+saveRDS(KD.S.phase.marker.sig, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_S5_up_down_reg_markers.rds")
 
 
 KD.S.phase.marker.sig.wide <- KD.S.phase.marker.sig %>% dplyr::select(GeneID, group, comparison)
@@ -457,7 +400,7 @@ KD.S.phase.marker.v2.sig$comparison <- "scRNA_KD:S1S2.vs.scRNA_KD:all"
 
 KD.S.phase.marker.v2.sig <- left_join(KD.S.phase.marker.v2.sig, prod.desc, by = c("GeneID" = "TGME49"))
 
-saveRDS(KD.S.phase.marker.v2.sig, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_all_up_down_reg_markers.rds")
+saveRDS(KD.S.phase.marker.v2.sig, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_all_up_down_reg_markers.rds")
 
 KD.S.phase.marker.v2.wide <- KD.S.phase.marker.v2.sig %>% dplyr::select(GeneID, group, comparison)
 KD.S.phase.marker.v2.wide <- KD.S.phase.marker.v2.wide %>% pivot_wider(names_from = comparison , values_from =group )
@@ -509,7 +452,7 @@ KD.vs.WT.S.phase$comparison <- "scRNA_KD:S1S2.vs.WT:S"
 KD.vs.WT.S.phase <- KD.vs.WT.S.phase %>% mutate(group = ifelse(avg_log2FC > 0 ,"up_reg", "down_reg"))
 KD.vs.WT.S.phase.sig <- KD.vs.WT.S.phase %>% dplyr::filter(abs(avg_log2FC) > log2(1.5) & p_val_adj < 0.01) 
 KD.vs.WT.S.phase.sig <- left_join(KD.vs.WT.S.phase.sig, prod.desc, by = c("GeneID" = "TGME49"))
-saveRDS(KD.vs.WT.S.phase.sig, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_S_up_down_reg_markers.rds")
+saveRDS(KD.vs.WT.S.phase.sig, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_S_up_down_reg_markers.rds")
 
 KD.vs.WT.S.phase.sig.wide <- KD.vs.WT.S.phase.sig %>% dplyr::select(GeneID, group, comparison)
 KD.vs.WT.S.phase.sig.wide <- KD.vs.WT.S.phase.sig.wide %>% pivot_wider(names_from = comparison , values_from =group )
@@ -557,7 +500,7 @@ KD.S1S2.vs.WT <- KD.S1S2.vs.WT %>% mutate(group = ifelse(avg_log2FC > 0 ,"up_reg
 KD.S1S2.vs.WT.sig <- KD.S1S2.vs.WT %>% dplyr::filter(abs(avg_log2FC) > log2(1.5) & p_val_adj < 0.01) 
 KD.S1S2.vs.WT.sig <- left_join(KD.S1S2.vs.WT.sig, prod.desc, by = c("GeneID" = "TGME49"))
 
-saveRDS(KD.S1S2.vs.WT.sig, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_all_phases_up_down_reg_markers.rds")
+saveRDS(KD.S1S2.vs.WT.sig, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_all_phases_up_down_reg_markers.rds")
 
 
 KD.S1S2.vs.WT.sig.wide <- KD.S1S2.vs.WT.sig %>% dplyr::select(GeneID, group, comparison)
@@ -596,10 +539,10 @@ ggsave("../Output/toxo_cdc/ME49_59/figures_paper/scRNA_KD_S1_S2_vs_scRNA_WT_all_
 
 ## description of genes to be added to the mega tab
 
-prod.desc  <- read.xlsx('../Input/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 prod.desc <- left_join(prod.desc, TGGT1_ME49, by = c("GeneID" = "TGGT1")) %>% na.omit()
-MJ_annot <- read.xlsx("../Input/Toxo_genomics/genes/MJ_annotation.xlsx")
+MJ_annot <- read.xlsx("../Input_sub/Toxo_genomics/genes/MJ_annotation.xlsx")
 MJ_annot <- MJ_annot %>% dplyr::select(!Product.Description)
 prod.desc <- left_join(prod.desc, MJ_annot, by= "TGME49" )
 prod.desc <- prod.desc %>% 
@@ -609,13 +552,13 @@ prod.desc <- prod.desc %>%
 
 ## Combine all DEG analysis performed 
 
-DEGs.KD.vs.WT.sig.desc <- readRDS("../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.rds")
-KD.vs.WT.phase.wide <- readRDS("../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5_WIDE.rds")
+DEGs.KD.vs.WT.sig.desc <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.rds")
+KD.vs.WT.phase.wide <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_markers_sig_phase_based_new_fc_1_5_WIDE.rds")
 names(KD.vs.WT.phase.wide) <- gsub("regulation", "group", names(KD.vs.WT.phase.wide))
-KD.S.phase.marker.sig <- readRDS("../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_S5_up_down_reg_markers.rds")
-KD.S.phase.marker.v2.sig <- readRDS("../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_all_up_down_reg_markers.rds")
-KD.vs.WT.S.phase.sig <- readRDS("../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_S_up_down_reg_markers.rds")
-KD.S1S2.vs.WT.sig.wide <- readRDS("../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_all_phases_up_down_reg_markers.rds")
+KD.S.phase.marker.sig <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_S5_up_down_reg_markers.rds")
+KD.S.phase.marker.v2.sig <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_KD_all_up_down_reg_markers.rds")
+KD.vs.WT.S.phase.sig <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_S_up_down_reg_markers.rds")
+KD.S1S2.vs.WT.sig.wide <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_S1_S2_phase_vs_WT_all_phases_up_down_reg_markers.rds")
 
 
 all.tab <- list(DEGs.KD.vs.WT.sig.desc, 
@@ -649,117 +592,11 @@ all.tab.df.wide <- all.tab.df %>% pivot_wider(names_from = "comparison", values_
 all.tab.df.wide.desc <- left_join(all.tab.df.wide, prod.desc, by = c("GeneID" = "TGME49") )
 
 modulated <- all.tab.df.wide.desc
-saveRDS(modulated, "../Input/toxo_cdc/rds_ME49_59/AP2XII8_KD_modulated_genes_all_comparisons.rds")
+saveRDS(modulated, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_modulated_genes_all_comparisons.rds")
 write.xlsx(modulated, "../OutPut/toxo_cdc/ME49_59/tables/AP2XII8_KD_modulated_genes_all_comparisons.xlsx")
 
 # add cut and run
-CutRun.peaks.motif.chip <- readRDS("../Input/toxo_cdc/rds_ME49_59/union_peaks_cut_run_motif_NO_frag_filt_motif_chip.rds")
+CutRun.peaks.motif.chip <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/union_peaks_cut_run_motif_NO_frag_filt_motif_chip.rds")
 CutRun.modulated <- full_join(CutRun.peaks.motif.chip, modulated, by = c("gene_name" = "GeneID"))
-
-
-## add toxoplasma life stages
-## life stage scores (Vinny) - extracellular lab adaptation paper
-scores <- read.xlsx("../Input/Toxo_genomics/genes/Extra over intra for pvalue copy.xlsx", sheet = 1)
-
-score_tab <- scores %>% filter(rowSums(.[,c(2:5)] > 2) > 0)
-score_tab <- score_tab %>% mutate(lifeStage = ifelse(tachy == 3 , "tachy", 
-                                                     ifelse(brady == 3, 'brady', 
-                                                            ifelse(mero == 3 , "mero",
-                                                                   ifelse(sporo == 3 , "sporo", "")))))
-life.stage.tab <- score_tab %>% rowwise() %>% mutate(max = max(.[,c(2,5)]))
-life.stage.tab$category <- "lifeStage.vinny.score" 
-
-life.stage.wide <- life.stage.tab %>% dplyr::select(Gene.ID, lifeStage, category) %>% 
-  pivot_wider(names_from = category, values_from = lifeStage)
-life.stage.wide$Gene.ID <- gsub("TGGT1", "TGME49",life.stage.wide$Gene.ID )
-names(life.stage.wide)[1] <- "gene_name"
-life.stage.wide <- left_join(life.stage.wide, prod.desc, by = c("gene_name" = "TGME49"))
-life.stage.wide <- life.stage.wide %>% dplyr::select(gene_name, lifeStage.vinny.score, ProductDescription)
-
-CutRun.modulated.lfS <- left_join(CutRun.modulated, life.stage.wide, by = "gene_name")
-
-## life stage compiled by Jingjing
-
-Tachy.JJ <- read.xlsx("../Input/Toxo_genomics/genes/Life_Stage_Genes_List_Unique.xlsx", sheet = 1)
-Tachy.JJ <- Tachy.JJ %>% 
-  dplyr::select(Gene.ID, Product.Description) %>% mutate(lfs.stage.Jingjing = "tachy")
-
-brady.JJ <- read.xlsx("../Input/Toxo_genomics/genes/Life_Stage_Genes_List_Unique.xlsx", sheet = 2)
-brady.JJ <- brady.JJ %>% 
-  dplyr::select(Gene.ID, Product.Description) %>% mutate(lfs.stage.Jingjing = "brady")
-
-
-mero.JJ <- read.xlsx("../Input/Toxo_genomics/genes/Life_Stage_Genes_List_Unique.xlsx", sheet = 3)
-mero.JJ <- mero.JJ %>% 
-  dplyr::select(Gene.ID, Product.Description) %>% mutate(lfs.stage.Jingjing = "mero")
-
-sporo.JJ <- read.xlsx("../Input/Toxo_genomics/genes/Life_Stage_Genes_List_Unique.xlsx", sheet = 4)
-sporo.JJ <- sporo.JJ %>% 
-  dplyr::select(Gene.ID, Product.Description) %>% mutate(lfs.stage.Jingjing = "sporo")
-
-lfs.JJ <- do.call("rbind", list(Tachy.JJ,brady.JJ, mero.JJ , sporo.JJ))
-
-CutRun.modulated.lfS.v4 <- left_join(CutRun.modulated.lfS,lfs.JJ , by = c("gene_name" = "Gene.ID"))
-
-## final mega table
-saveRDS(CutRun.modulated.lfS.v4, "../Input/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v4.rds")
-write.xlsx(CutRun.modulated.lfS.v4, "../Output/toxo_cdc/ME49_59/tables/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v4.xlsx")
-
-
-#########################################################
-
-#  overlaps of public chip data sets 
-all.chip <- readRDS("../Input/toxo_cdc/rds_ME49_59/all_public_chip_seq.rds")
-all.chip.list <- split(all.chip, f = all.chip$chip)
-all.chip.list <- lapply(all.chip.list, "[[", 1)
-all.chip.list <- all.chip.list[-2]
-
-p <- ggVennDiagram(all.chip.list)
-p
-ggsave("../Output/toxo_cdc/ME49_59/figures_paper/venn_HDAC3_AP2XII2_MORC_genes.pdf", 
-       plot = p)
-
-AP2XII8.peak.genes.union <- readRDS("../Input/toxo_cdc/rds_ME49_59/Union_all_new_peaks_0.05_qval_NO_frag_filt_intersect_info.rds")
-AP2XII8.peak.genes.union <- AP2XII8.peak.genes.union %>% dplyr::select(gene_name)
-
-
-all.chip.list <- c(all.chip.list, AP2XII8 = list(AP2XII8.peak.genes.union$gene_name))
-p <- ggVennDiagram(all.chip.list)
-p
-ggsave("../Output/toxo_cdc/ME49_59/figures_paper/venn_HDAC3_AP2XII2_MORC_AP2XII8_genes.pdf", 
-       plot = p)
-
-
-## motif proportion
-CutRun <- readRDS("../Input/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v4.rds")
-CutRun <- CutRun %>% dplyr::select(gene_name, has.motif, motif) %>% filter(has.motif == "yes") %>% distinct()
-CutRun.list <- split(CutRun, f = CutRun$motif)
-CutRun.list <- lapply(CutRun.list, "[[", 1) 
-
-p <- ggVennDiagram(CutRun.list)
-p
-ggsave("../Output/toxo_cdc/ME49_59/figures_paper/motifs_proportion_overlap_venn.pdf", 
-       plot = p, height = 6, width = 6) 
-
-CutRun.summ <- CutRun %>% group_by(motif) %>% summarise(genes = list(gene_name), num.genes = n())
-
-p <- ggplot(CutRun.summ, aes(x=motif, y= num.genes, fill = motif)) +
-  geom_bar(stat="identity")+
-  geom_text(aes(label=num.genes), vjust=1.5, color="black", size=9, fontface = 'bold') + 
-  theme_bw() + theme(
-    axis.text.x = element_text(size = 14, face = "bold"),
-    axis.text.y = element_text(size = 14, face = "bold"),
-    axis.ticks = element_blank(),
-    axis.title.x = element_text(size = 16, face = "bold"),
-    axis.title.y = element_text(size = 16, face = "bold"))+
-  theme(legend.text = element_text(face = "bold", size = 10),
-        legend.title = element_text(face = "bold", size = 14)) + 
-  theme(plot.title = element_text(size = 18, face = "bold")) +
-  ggtitle("number of genes with the identified motif")
-
-p  
-
-ggsave("../Output/toxo_cdc/ME49_59/figures_paper/motifs_proportion_overlap_bar_plot.pdf", 
-       plot = p, height = 6, width = 6) 
 
 
