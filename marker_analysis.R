@@ -22,6 +22,9 @@ Intra.markers.sig <- left_join(Intra.markers.sig, prod.desc, by = c("gene" = "TG
 
 ss <- Intra.markers.sig %>% group_by(cluster) %>% summarise(num.DEG = n())
 ss
+saveRDS(Intra.markers.sig, '../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
+
+length(unique(Intra.markers.sig$GeneID))
 
 ###################################################
 ## marker analysis using inferred transition points 
@@ -49,6 +52,9 @@ rna.sig.markers.rna.trans <- rna.sig.markers.rna.trans %>%
 
 ss.rna <- rna.sig.markers.rna.trans %>% group_by(cluster) %>% summarise(num.DEG = n())
 ss.rna$num.DEG
+
+
+saveRDS(rna.sig.markers.rna.trans, '../Input_sub/toxo_cdc/rds_ME49_59/rna_markers_rna_trns_sig_v2.rds')
 
 
 
