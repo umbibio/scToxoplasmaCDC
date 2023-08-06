@@ -6,11 +6,11 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 
 ## Count files
-intra.file.csv <- "../Input/toxo_scRNA_MJ_ME49_59/RH.intra.expr.csv"
+intra.file.csv <- "../Input_sub/toxo_scRNA_MJ_ME49_59/RH.intra.expr.csv"
 
 ## IDs
-prod.desc  <- read.xlsx('../Input/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 
 getExpr <- function(in.file, TGGT1_ME49){
@@ -48,13 +48,12 @@ S.O <- subset(x = S.O.intra, downsample = 8000)
 S.O <- prep_S.O(S.O, res = 0.4)
 DimPlot(S.O)
 
-saveRDS(S.O, "../Input_KZ/toxo_cdc/rds_ME49_59/S.O.rna.WT.rds")
 
 ############################################################
 
 S.O.list <- list(intra = S.O.intra)
 
-S.O.tg.boothroyd <- readRDS('../Input_YR/toxo_cdc/rds_ME49_59/S.O.tg_RH_boothroyd.rds')
+S.O.tg.boothroyd <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.tg_RH_boothroyd.rds')
 
 S.Os <- mclapply(S.O.list, function(S.O){
   S.O <- prep_S.O(S.O, res = 0.4)
@@ -73,5 +72,5 @@ S.Os <- lapply(1:length(S.Os), function(i){
 })
 
 
-saveRDS(S.Os[[1]], '../Input/toxo_cdc/rds_ME49_59/S.O.intra_lables.rds')
+saveRDS(S.Os[[1]], '../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_lables.rds')
 
