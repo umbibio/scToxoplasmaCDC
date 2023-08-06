@@ -130,17 +130,17 @@ peak.genes.bed.merged.bed <- peak.genes.bed.merged %>% dplyr::select(V1.x, start
 
 ## write peak gene assignment file in bed format without gene names and strand info 
 
-# write.table(peak.genes.bed.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.bed",
-#             sep = "\t", quote = F, row.names = F, col.names = F)
-# write.xlsx(peak.genes.bed.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.xlsx")
-# 
-# 
-# # only peaks iinformation to be loaded into IGV
-# peak.merged.bed <- peak.genes.bed.merged.bed %>% 
-#   ungroup() %>% dplyr::select(V1.x,start_peak, end_peak)
-# 
-# 
-# write.table(peak.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final_only_peaks.bed",
-#             sep = "\t", quote = F, row.names = F, col.names = F)
-# 
+write.table(peak.genes.bed.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.bed",
+            sep = "\t", quote = F, row.names = F, col.names = F)
+write.xlsx(peak.genes.bed.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.xlsx")
+
+
+# only peaks iinformation to be loaded into IGV
+peak.merged.bed <- peak.genes.bed.merged.bed %>% 
+  ungroup() %>% dplyr::select(V1.x,start_peak, end_peak)
+
+
+write.table(peak.merged.bed, "../Input_sub/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final_only_peaks.bed",
+            sep = "\t", quote = F, row.names = F, col.names = F)
+
 
