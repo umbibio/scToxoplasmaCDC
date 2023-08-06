@@ -5,9 +5,9 @@ source('./loadlb.R')
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 ## NEW - prod desc MJ
-prod.desc <- read.xlsx("../Input/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
-atac_sub <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
-rna_sub <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
+prod.desc <- read.xlsx("../Input_sub/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
+atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
 
 ### Differential gene expression
 Idents(rna_sub) <- 'phase'
@@ -21,15 +21,15 @@ Intra.markers.sig <- Intra.markers %>% dplyr::filter(avg_log2FC > log2(1.5) & p_
 Intra.markers.sig <- left_join(Intra.markers.sig, prod.desc, by = c("gene" = "TGME49") )
 
 ss <- Intra.markers.sig %>% group_by(cluster) %>% summarise(num.DEG = n())
-
+ss
 
 ###################################################
 ## marker analysis using inferred transition points 
 ###################################################
 
-prod.desc <- read.xlsx("../Input/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
-rna_sub <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
-atac_sub <- readRDS('../Input/toxo_cdc/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
+prod.desc <- read.xlsx("../Input_sub/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
+rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
+atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
 
 ## Differential gene expression usin rna transition
 ## rna markers using rna transition points
@@ -41,14 +41,14 @@ rna.markers.rna.trans$GeneID <- gsub('-', '_', rna.markers.rna.trans$gene)
 
 rna.sig.markers.rna.trans <- rna.markers.rna.trans %>% dplyr::filter(avg_log2FC > log2(1.5) & p_val_adj < 0.05)
 dim(rna.sig.markers.rna.trans)
-
+length(unique(rna.sig.markers.rna.trans$GeneID))
 
 rna.sig.markers.rna.trans <- left_join(rna.sig.markers.rna.trans, prod.desc, by = c("gene" = "TGME49") )
 rna.sig.markers.rna.trans <- rna.sig.markers.rna.trans %>% 
   mutate(new.prod.desc = ifelse(ProductDescription == "hypothetical protein" & !is.na(new.name), new.name, ProductDescription))
 
 ss.rna <- rna.sig.markers.rna.trans %>% group_by(cluster) %>% summarise(num.DEG = n())
-sum(ss.rna$num.DEG)
+ss.rna$num.DEG
 
 
 
