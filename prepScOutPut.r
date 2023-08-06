@@ -4,8 +4,8 @@
 source('./util_funcs.R')
 source('./loadlb.R')
                                                                                                 
-#input.dir <-  "../Input/toxo_scRNA_MJ_ME49_59/27-30-33-hpi_with_10M_RH-YFP2/"
-input.dir <-  "../Input/toxo_scRNA_AP2XII8_KD_230327/"
+input.dir <-  "../Input_sub/toxo_scRNA_MJ_ME49_59/27-30-33-hpi_with_10M_RH-YFP2/"
+
 barcode.path <- paste(input.dir, "filtered_feature_bc_matrix/barcodes.tsv.gz", sep = "")
 features.path <- paste(input.dir, "filtered_feature_bc_matrix/features.tsv.gz", sep = "")
 matrix.path <- paste(input.dir, "filtered_feature_bc_matrix/matrix.mtx.gz", sep = "")
@@ -26,6 +26,6 @@ rownames(mat) = feature.names$V1
 expr <- as.data.frame(as.matrix(mat))
 dim(expr)
 
-write.csv(expr, "../Input/toxo_scRNA_AP2XII8_KD_230327/AP2XII8_KD.expr.csv")
+write.csv(expr, "../Input_sub/toxo_scRNA_MJ_ME49_59/RH.intra.expr.csv")
 
 
