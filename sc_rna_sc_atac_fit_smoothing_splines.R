@@ -9,8 +9,8 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 ## Read in the data.
 
-sc.rna.genes.expr.pt <- readRDS('../Input/toxo_cdc/rds_ME49_59/sc_rna_genes_expr_pt.rds')
-sc.atac.genes.expr.pt <- readRDS('../Input/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
+sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_genes_expr_pt.rds')
+sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
 
 
 ## Common genes between the data sets
@@ -84,5 +84,5 @@ sc.atac.spline.fits <- mclapply(1:length(comm.genes), function(i){
 
 sc.atac.spline.fits <- bind_rows(sc.atac.spline.fits)
 
-saveRDS(sc.atac.spline.fits, '../Input/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
+saveRDS(sc.atac.spline.fits, '../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
