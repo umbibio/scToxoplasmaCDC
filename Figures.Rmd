@@ -644,6 +644,7 @@ pp <- grid.arrange(grobs = trans.plt, ncol = 2)
 
 ```
 
+## fig 4D
 ```{r}
 
 atac.sub.clust.tab <- readRDS( "../Input_sub/toxo_cdc/rds_ME49_59/atac_sub_clusters_access_profiles_list_ordered.rds")
@@ -661,83 +662,48 @@ pp <- grid.arrange(grobs = atac.sub.clust.plt, ncol = 4)
 ```
 
 
-## fig 6 B - GO plot
-
+## fig 7 A
 
 ```{r}
-```
 
-## fig 8 B
-```{r}
+S.O.rna.WT <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.WT_labels.rds")
+Idents(S.O.rna.WT) <- "phase"
 
-tss.df.all <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/motif_dist_from_TSS_plt.rds")
+umap.WT <- FetchData(object = S.O.rna.WT, vars = c("UMAP_1", "UMAP_2", "UMAP_3", "phase"))
+umap.WT$phase <- factor(umap.WT$phase)
 
-p <- ggplot(tss.df.all, aes(x = tss.dist)) + 
-  geom_histogram(aes(y = ..density..),
-                 colour = 1, fill = "white") +
-  geom_density(lwd = 0.7,linetype = 1,colour = 2) +
-  theme_bw() + 
-  facet_wrap(~ motif, scales='free', ncol = 3) +
-  theme(strip.background=element_rect(fill='white', color = 'black'),
-        panel.spacing = unit(1.5, "lines"), 
-        strip.text.x=element_text(angle=0, hjust=0.5,vjust=0.5, size = 14,face = 'bold'),
-        plot.title = element_text(size=16, face = "bold.italic", color = 'black'),
-        axis.title.x = element_text(size=20, face="bold"),
-        axis.title.y = element_text(size=20, face="bold"),
-        axis.text.y =  element_text(size = 10, face = "bold", colour = "black"),
-        axis.text.x =  element_text(size = 10, face = "bold", colour = "black", angle = 35))+
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        #panel.border = element_blank(),
-        panel.spacing = unit(0.5, "lines"),
-        strip.text = element_text(face = "bold", size = 24,  angle = 0), 
-        strip.placement = "outside") +
-  theme(legend.text = element_text(face = "bold", size = 10),
-        legend.title = element_text(face = "bold", size = 14))+
-  theme(panel.spacing = unit(1.5, "lines"))
-p  
+plot_ly(umap.WT,
+        x = ~UMAP_1, y = ~UMAP_2, z = ~UMAP_3,
+        colors  = c("#b6232a",'#ed7202', '#caae05', '#6f883a', '#b138ee'),
+        color =  umap.WT$phase, 
+        size = 0.2)
+
+
+S.O.rna.KD <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
+Idents(S.O.rna.KD) <- "phase"
+
+umap.KD <- FetchData(object = S.O.rna.KD, vars = c("UMAP_1", "UMAP_2", "UMAP_3", "phase", "seurat_clusters"))
+umap.KD$phase<- factor(umap.KD$phase)
+
+plot_ly(umap.KD, 
+        x = ~UMAP_1, y = ~UMAP_2, z = ~UMAP_3,
+        color =  umap.KD$phase, 
+        colors  = c("#b6232a",'#ed7202', '#caae05', '#6f883a', '#b138ee'),
+        size = 0.2)
+
 
 ```
 
-## fig 9 A
+## fig 7 B
+
 ```{r}
-AP2.clusters <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Cyclic_33_AP2s_sc_rna_sc_atac_dtw_4_clust.rds')
 
-p  <- ggplot(AP2.clusters, aes(x= time,y=normExpr)) +
-    geom_path(aes(color = Name,),alpha = 0.8, size = 0.8)+ 
-    theme_bw(base_size = 14) +
-    theme(legend.position = "right") +
-    ylab('normExpr') + xlab('Time') +
-    theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
-    theme(axis.text.y = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
-    theme(strip.background = element_rect(colour="black", fill="white",size=0.5, linetype="solid")) +
-    theme(strip.text = element_text(size = 14, face="bold", angle = 0)) + 
-    coord_cartesian(xlim = c(0,6.5)) + 
-    geom_text_repel(aes(label = label), size = 3.4, fontface = "bold",
-                    box.padding = unit(0.6, "lines"),
-                    max.overlaps = 300,nudge_x = 0.25, nudge_y = 0.25,hjust=0.25,segment.size = 0.1,
-                    na.rm = TRUE)+ 
-    facet_grid(cluster.RNA~data, scales = 'free', space = 'free') +
-
-    theme(
-      plot.title = element_text(size=14, face = "bold.italic", color = 'red'),
-      axis.title.x = element_text(size=14, face="bold", hjust = 1),
-      axis.title.y = element_text(size=14, face="bold"),
-      legend.position = 'none',
-      legend.title = element_text(colour="black", size=12, 
-                                  face="bold"),
-      legend.text = element_text(colour="black", size=12, 
-                                 face="bold"))
-plot(p)
 
 ```
 
 
 
-## fig 10 A : for expression profile of AP2XII-8 please see the we application 
-
-
-## fig 11 B 
+## fig 7 B 
 
 ```{r}
 
@@ -918,201 +884,41 @@ plot(p1)
 
 ```
 
-## fig 12 F
+## fig 7E F
 ```{r}
-tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v5.rds")
-tab.down.reg <- tab %>% 
-  dplyr::select(intersection_CutRun_dataSets, TGME49, has.motif, motif, Global_KD_vs_WT, ProductDescription, Category) %>%
-  filter(intersection_CutRun_dataSets == "yes" , has.motif == "yes" & Global_KD_vs_WT == "down_reg") %>% distinct()
-
-
-tab.down.reg <- tab.down.reg %>% group_by(TGME49) %>% mutate(motif.list = list(motif)) 
-tab.down.reg <- tab.down.reg %>% rowwise() %>%
-  mutate(which_motif = ifelse(length(unlist(motif.list)) > 1 , "both" , "one")) %>% distinct()
-
-ind.one <- which(tab.down.reg$which_motif == "one")
-tab.down.reg$which_motif[ind.one] <- tab.down.reg$motif[ind.one]
-
-tab.sum <- tab.down.reg %>% group_by(which_motif, Category, Global_KD_vs_WT) %>% 
-  summarise(genes = list(unique(TGME49)), total = length(unique(TGME49)))
-
-tab.down.reg.uniq <- tab.down.reg %>%
-  dplyr::select(TGME49, has.motif, Global_KD_vs_WT, ProductDescription, Category, which_motif) %>%
+tab <- read.xlsx("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.xlsx")
+tab.down <- tab %>% 
+  dplyr::select(intersection_CutRun_dataSets, TGME49,  motif, KD_vs_WT_phase_based, ProductDescription, Category) %>%
+  filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based =="down_reg") %>% 
   distinct()
 
-tab.sum
-
-```
-
-## supplements
-```{r}
-
-
-IMC.clusters <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/IMC_sc_rna_sc_atac_joint_dtw_clust_new_update.rds')
-IMC.clusters$data <- factor(IMC.clusters$data, levels = c("scRNA", "scATAC"))
-plot_rna_atac_trends <- function(IMC.clusters){
-  p  <- ggplot(IMC.clusters, aes(x= time,y=normExpr)) +
-    geom_path(aes(color = Name,),alpha = 0.8, size = 0.8)+ 
-    theme_bw(base_size = 14) +
-    theme(legend.position = "right") +
-    ylab('normExpr') + xlab('Time') +
-    theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
-    theme(axis.text.y = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
-    theme(strip.background = element_rect(colour="black", fill="white",
-                                          size=0.5, linetype="solid")) +
-    theme(strip.text = element_text(size = 14, face="bold", angle = 0)) + 
-    
-    coord_cartesian(xlim = c(0,6.5)) + 
-    geom_text_repel(aes(label = label), size = 2.5, fontface = "bold",
-                    box.padding = unit(0.6, "lines"),
-                    max.overlaps = 300,
-                    nudge_x = 0.25, 
-                    nudge_y = 0.25,
-                    hjust=0.25,
-                    segment.size = 0.1,
-                    na.rm = TRUE)+ 
-    facet_grid(cluster.RNA~data, scales = 'free', space = 'free') +
-
-    theme(
-      plot.title = element_text(size=14, face = "bold.italic", color = 'red'),
-      axis.title.x = element_text(size=14, face="bold", hjust = 1),
-      axis.title.y = element_text(size=14, face="bold")
-    ) + 
-    theme(legend.position = 'none',
-      legend.title = element_text(colour="black", size=12, 
-                                  face="bold"),
-      legend.text = element_text(colour="black", size=12, face="bold"))
-  
-  
-  return(p)
-  
-}
+# has at least one motif
+tab.motif <- tab.down %>% filter(!is.na(motif)) %>% group_by(TGME49) %>% mutate(motif.list = list(unique(motif)))
+tab.motif <- tab.motif %>% rowwise() %>%
+  mutate(which_motif = ifelse(length(unlist(motif.list)) > 1 , "both" ,"one")) %>% distinct()
+ind <- which(tab.motif$which_motif == "one")
+tab.motif$which_motif[ind] <- tab.motif$motif[ind]
 
 
-p1 <- plot_rna_atac_trends(IMC.clusters)
+# has no motif
+tab.no.motif <- tab.down %>% filter(is.na(motif)) %>% mutate(motif.list = "none", which_motif = "none")
 
-plot(p1)
-```
-```{r}
-BCs_clusters <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/BC_sc_rna_sc_atac_joint_dtw_clust_new_update.rds')
-BCs_clusters$data <- factor(BCs_clusters$data, 
-                                         levels = c("scRNA", "scATAC"))
-plot_rna_atac_trends <- function(BCs_clusters){
-  p  <- ggplot(BCs_clusters, aes(x= time,y=normExpr)) +
-    geom_path(aes(color = Name,),alpha = 0.8, size = 0.8)+ 
-    theme_bw(base_size = 14) +
-    theme(legend.position = "right") +
-    ylab('normExpr') + xlab('Time') +
-    theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
-    theme(axis.text.y = element_text(angle = 0, hjust = 1, size = 12, face="bold")) +
-    theme(strip.background = element_rect(colour="black", fill="white",
-                                          size=0.5, linetype="solid")) +
-    theme(strip.text = element_text(size = 14, face="bold", angle = 0)) + 
-    
-    coord_cartesian(xlim = c(0,6.5)) + 
-    geom_text_repel(aes(label = label), size = 2.5, fontface = "bold",
-                    box.padding = unit(0.6, "lines"),
-                    max.overlaps = 300,
-                    #segment.angle = 180,
-                    nudge_x = 0.25, 
-                    nudge_y = 0.25,
-                    hjust=0.25,
-                    #nudge_x=0.25, 
-                    segment.size = 0.1,
-                    na.rm = TRUE)+ 
-    facet_grid(cluster.RNA~data, scales = 'free', space = 'free') +
-    
-    
-    #ggtitle(titles[i]) +
-    theme(
-      plot.title = element_text(size=14, face = "bold.italic", color = 'red'),
-      axis.title.x = element_text(size=14, face="bold", hjust = 1),
-      axis.title.y = element_text(size=14, face="bold")
-    ) + 
-    theme(#legend.position = c(0.15, 0.85),
-      legend.position = 'none',
-      legend.title = element_text(colour="black", size=12, 
-                                  face="bold"),
-      legend.text = element_text(colour="black", size=12, 
-                                 face="bold"))
-  
-  
-  return(p)
-  
-}
+tab.down.motif <- rbind(tab.motif, tab.no.motif)
+table(tab.down.motif$which_motif, tab.down.motif$Category)
 
+## number of genes with both motifs / 2
 
-p1 <- plot_rna_atac_trends(BCs_clusters)
-
-plot(p1)
-
-
-
-```
-
-## Heatmaps - ordered by atac peaks
-```{r}
-sc.rna.mu.scale.v2 <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_mu_scale_rna_trans_ord_by_atac.rds')
-sc.atac.mu.scale.v2 <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_mu_scale_atac_trans_ord_by_atac.rds')
-
-# new version
-sc.rna.mu.scale.v2$data <- "scRNA"
-#sc.rna.mu.scale$peak.ord.rna <- sc.rna.mu.scale$peak.ord
-sc.atac.mu.scale.v2$data <- "scATAC"
-sc.atac.mu.scale.v2$peak.ord.atac <- sc.atac.mu.scale.v2$peak.ord
-df <- rbind(sc.rna.mu.scale.v2, sc.atac.mu.scale.v2)
-
-df$data <- factor(df$data, levels = c( "scATAC", "scRNA"))
-p2 <- ggplot(df, aes(x = x, y = GeneID, fill = expr)) + 
-  geom_tile() + 
-  # facet_grid(phase~., scales = "free",  space='free',
-  #            labeller=label_wrap_gen(multi_line = TRUE))+
-  ylab("Genes") + xlab("time/cells") +
-  #scale_fill_gradientn(colours = hm.palette(10)) +
-  facet_grid(. ~ data, scales = "free", space='free', labeller=label_wrap_gen(multi_line = TRUE))+
-  scale_fill_gradientn(colours = viridis::inferno(10)) +
-  theme(panel.spacing = unit(0.01, "lines")) + 
-  theme(
-    strip.background = element_rect(fill = "white", color = "white"), 
-    panel.spacing = unit(0.01, "lines"),
-    strip.text = element_text(size = 20, face = "bold"),
-    axis.text.x = element_blank(),
-    axis.ticks = element_blank(),
-    axis.text.y  = element_blank(),
-    plot.title = element_text(size=20, face="bold"),
-    axis.title.x = element_text(size=20, face="bold"),
-    axis.title.y = element_text(size=20, face="bold"),
-    legend.position = "none") + ylab('Genes')
-
-
-plot(p2)
-```
-
-
-```{r}
-Intra.markers.sig <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
-
-ss <- Intra.markers.sig %>% group_by(cluster) %>% summarise(num.DEG = n())
-## SI figure 1?
-phase.cols <- c('#b7222a', '#ee7202', '#caae05', '#70883a', '#b138ee')
-p <- ggplot(data=ss, aes(x=cluster, y=num.DEG, fill = cluster)) +
-  geom_bar(stat="identity")+
-  geom_text(aes(label=num.DEG), vjust=1.6, color="black", size=8, fontface="bold")+
-  theme_minimal() + 
-  scale_fill_manual(values = phase.cols) + 
-  ylab('DEGs') + xlab('') +
-  theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 16, face="bold", color = "black")) +
-  theme(axis.text.y = element_text(angle = 0, hjust = 1, size = 16, face="bold", color= "black")) +
-  theme(strip.background = element_rect(colour="black", fill="white",
-                                        size=0.5, linetype="solid")) +
-  theme(legend.position = 'None',
-    plot.title = element_text(size=18, face = "bold.italic", color = 'black'),
-    axis.title.x = element_text(size=18, face="bold", hjust = 1),
-    axis.title.y = element_text(size=18, face="bold")
-  ) 
-
-p <- plot(p) + ggtitle("scRNA-seq markers - phase-based")
-
+HC.peaks.clust <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_ribosomal_direct_targets_41.rds')
+HC.peaks.clust.rna <- HC.peaks.clust[HC.peaks.clust$data == "scRNA",]
+HC.peaks.clust.rna$cluster.RNA <- gsub("C 2", "C 1", gsub("C 3", "C 1", HC.peaks.clust.rna$cluster.RNA ))
+p <- plot_rna_atac_trends(HC.peaks.clust.rna) 
 plot(p)
+
+
+
+HC.peaks.clust.atac <- HC.peaks.clust[HC.peaks.clust$data == "scATAC",]
+p <- plot_atac_trends(HC.peaks.clust.atac) 
+plot(p)
+
 ```
 
