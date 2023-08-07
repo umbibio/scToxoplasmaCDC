@@ -11,30 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ## load libraries 
 ```{r}
 
-library(Seurat)
-library(openxlsx)
-library(ggplot2)
-library(ggfortify)
-library(jcolors)
-require(gridExtra)
-library(grid)
-library(matrixStats)
-library(tidyverse)
-library(RColorBrewer)
-library(sctransform)
-library(cowplot)
-library(patchwork)
-library(doParallel)
-library(ggVennDiagram)
-library(tidytext)
-library(viridis)
-library(MyEllipsefit)
-library(princurve)
-library(plotly)
-library(VennDiagram)
-
 source('./util_funcs.R')
-source('./util_funcs_YR.R')
+source("./util_funcs_YR.R")
+source("./loadlb.R")
 ```
 
 
@@ -633,8 +612,8 @@ trans.plt <- lapply(1:length(rna.trans.data.list), function(i) {
   
   my.df <- rna.trans.data.list[[i]]
   
-  p1 <- plot_rna_atac_trends.ord(my.df) +
-  ggtitle(names(rna.trans.marker.genes.list[i]))
+  p1 <- plot_rna_atac_trends.ord(my.df) 
+  #ggtitle(names(rna.trans.marker.genes.list[i]))
   
   p1
 })
@@ -728,161 +707,6 @@ venn.plot <- draw.pairwise.venn(
 grid.draw(venn.plot)
 ```
 
-
-## fig 12 A 
-### Global DEGs
-
-```{r}
-
-tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v5.rds")
-## DEGs KD vs WT phase based 
-KD.vs.WT.phase <- tab %>% dplyr::select(TGME49, KD_vs_WT_phase_based) %>% 
-  filter(KD_vs_WT_phase_based != "NA") %>% distinct()
-
-
-# cutRun genes in intersection of 4 data
-intrsct.peaks  <- tab %>% dplyr::select(TGME49,intersection_CutRun_dataSets) %>% 
-  distinct() %>% filter(intersection_CutRun_dataSets == "yes")
-
-## overlap - venn
-DEGs <- KD.vs.WT.phase
-
-
-venn.plot <- draw.pairwise.venn(
-  area1 = nrow(DEGs),
-  area2 = nrow(intrsct.peaks),
-  cross.area = 95,
-  #category = c("ATAC", "C&R"),
-  fill = c("red", "lightgoldenrod2"),
-  lty = rep("solid", 2),
-  lwd = 4,
-  col = c("darkred", "lightgoldenrod4"),
-  cex = 4,
-  cat.cex = 3,
-  ext.length = 0.9,
-  ext.line.lwd = 2.5,
-  #ext.line.lty = "dashed",
-
-)
-grid.draw(venn.plot)
-
-```
-
-## fig 12 C - bar plot
-```{r}
-tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v5.rds")
-
-HC.peaks <- tab %>% 
-  filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based %in% c('down_reg', 'up_reg', 'modulated') ) %>% dplyr::select(chr, start_peak, end_peak, V4, V5, V6,TGME49,intersection_CutRun_dataSets,KD_vs_WT_phase_based,ProductDescription , Category ) %>% 
-  distinct()
-
-names(HC.peaks)[9] <- "dir"
-
-HC.peaks.stat <- HC.peaks %>% group_by(dir, Category) %>%
-  summarise(total = n())
-
-HC.peaks.stat <- HC.peaks.stat %>% 
-  mutate(Color  = ifelse(dir == "down_reg", "#8080FA", "#fc6c85"))
-
-HC.peaks.stat <- HC.peaks.stat %>%
-  mutate(Category = stringr::str_trim(Category),
-    newcolor = ifelse(grepl("ribo", Category), alpha(Color, .5), Color)) 
-
-p <- ggplot(HC.peaks.stat, aes(dir, total)) +
-  geom_col(aes(fill = I(newcolor), color = Category),
-           position = position_stack(reverse = FALSE),linewidth = 0) +
-  geom_text(aes(label = total, group = Category),size = 8, color = "black",
-            fontface = 'bold', position = position_stack(vjust = .5, reverse = FALSE)) +
-  guides(color = guide_legend(
-    reverse = FALSE,
-    override.aes = list(fill = c("grey25", alpha("grey25", .5))))) +
-  theme_bw()+
-  theme(
-    axis.text.x = element_text(size = 16, face = "bold", colour = "black"),
-    axis.text.y = element_text(size = 14, face = "bold", colour = "black"),
-    axis.ticks = element_blank(), 
-    strip.background=element_rect(fill='black', color = 'black'),
-        panel.spacing = unit(1.5, "lines"), 
-        strip.text.x=element_text(angle=0, hjust=0.5,vjust=0.5, size = 14,face = 'bold'),
-        plot.title = element_text(size=16, face = "bold.italic", color = 'black'),
-        axis.title.x = element_text(size=22, face="bold"),
-        axis.title.y = element_text(size=22, face="bold"))+
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.spacing = unit(0.5, "lines"),
-        strip.text = element_text(face = "bold", size = 24,  angle = 0), 
-        strip.placement = "outside") +
-  theme(legend.text = element_text(face = "bold", size = 14),
-        legend.title = element_text(face = "bold", size = 16))+
-  theme(panel.spacing = unit(1.5, "lines")) +
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        panel.background = element_blank()) 
-
-p
-```
-## fig 12 D
-```{r}
-###  cluster down_reg genes
-sc.rna.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
-sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
-
-tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v5.rds")
-
-
-HC.peaks <- tab %>% 
-  filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based %in% c('down_reg', 'up_reg', 'modulated') ) %>% 
-  dplyr::select(chr, start_peak, end_peak, V4, V5, V6,TGME49,intersection_CutRun_dataSets, 
-                KD_vs_WT_phase_based,ProductDescription , Category ) %>% 
-  distinct()
-names(HC.peaks)[9] <- "dir"
-
-HC.peaks <- HC.peaks %>% filter(dir == "down_reg")
-colnames(HC.peaks) <- gsub("ProductDescription.x", "ProductDescription", colnames(HC.peaks))
-
-HC.peaks$gene_name <- gsub("_", "-", HC.peaks$TGME49) 
-HC.peaks.clust <- clust.df(HC.peaks, num.clust = 3)
-#HC.peaks.clust <- HC.peaks.clust[HC.peaks.clust$data == "scRNA",]
-p <- plot_rna_atac_trends(HC.peaks.clust) 
-plot(p)
-
-
-```
-
-## fig 12 E
-```{r}
-
-sc.rna.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
-sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
-
-tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v5.rds")
-names(tab) <- gsub("TGME49", "gene_name", names(tab))
-
-tab <- tab %>% 
-  filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based %in% c('down_reg', 'up_reg', 'modulated') ) %>% 
-  dplyr::select(chr, start_peak, end_peak, V4, V5, V6,gene_name,intersection_CutRun_dataSets, 
-                KD_vs_WT_phase_based, ProductDescription , Category ) %>% 
-  distinct()
-names(tab)[9] <- "dir"
-
-
-HC.peaks <- tab %>% filter(Category == "ribosomal")
-colnames(HC.peaks) <- gsub("ProductDescription.x", "ProductDescription", colnames(HC.peaks))
-
-
-expr.atac.tab <- get_rna_atac_profile(rna.splines = sc.rna.spline.fits, 
-                                      atac.splines = sc.atac.spline.fits, 
-                                      genes.tab = HC.peaks, scale = T)
-## if you wan the atac profiles as well, then do not filter data == "scRNA
-expr.tab <- expr.atac.tab %>% filter(data == "scRNA")
-p1 <- plot_rna_atac(expr.tab)
-
-
-plot(p1)
-
-```
 
 ## fig 7E F
 ```{r}
