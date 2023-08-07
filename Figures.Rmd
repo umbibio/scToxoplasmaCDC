@@ -682,7 +682,7 @@ plot_ly(umap.KD,
 
 
 
-## fig 7 B 
+## fig 6 B 
 
 ```{r}
 
@@ -707,8 +707,102 @@ venn.plot <- draw.pairwise.venn(
 grid.draw(venn.plot)
 ```
 
+## fig 7B
 
-## fig 7E F
+```{r}
+tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
+
+
+## DEGs KD vs WT phase based 
+KD.vs.WT.phase <- tab %>% dplyr::select(TGME49, KD_vs_WT_phase_based) %>% 
+  filter(KD_vs_WT_phase_based != "NA") %>% distinct()
+dim(KD.vs.WT.phase)
+
+# cutRun genes in intersection of 4 data
+intrsct.peaks  <- tab %>% dplyr::select(TGME49,intersection_CutRun_dataSets) %>% 
+  distinct() %>% filter(intersection_CutRun_dataSets == "yes")
+dim(intrsct.peaks)
+
+## overlap - venn
+DEGs <- KD.vs.WT.phase
+venn.list <- list(KD.vs.WT = unique(DEGs$TGME49), 
+                  High.Conf.Peaks = intrsct.peaks$TGME49)
+
+p <- ggVennDiagram(venn.list, set_size = 6, label_size = 8) 
+p
+```
+
+
+## fig 7C
+```{r}
+## summary and bar plot
+tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
+
+HC.peaks <- tab %>% 
+  filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based %in% c('down_reg', 'up_reg', 'modulated') ) %>% 
+  dplyr::select(chr, start_peak, end_peak, V4, V5, V6,TGME49,intersection_CutRun_dataSets,
+                KD_vs_WT_phase_based,ProductDescription , Category ) %>% 
+  distinct()
+names(HC.peaks)[9] <- "dir"
+
+HC.peaks.stat <- HC.peaks %>% group_by(dir, Category) %>%
+  summarise(total = n())
+
+HC.peaks.stat <- HC.peaks.stat %>% 
+  mutate(Color  = ifelse(dir == "down_reg", "#8080FA", "#fc6c85"))
+
+HC.peaks.stat <- HC.peaks.stat %>%
+  mutate( ## for this you will need to remove the whitespace 
+    Category = stringr::str_trim(Category),
+    newcolor = ifelse(grepl("ribo", Category), alpha(Color, .5), Color)
+  ) 
+
+#
+sum(HC.peaks.stat$total)
+HC.peaks.stat$dir <- factor(HC.peaks.stat$dir, levels = c("modulated", "up_reg", "down_reg"))
+p <- ggplot(HC.peaks.stat, aes(dir, total)) +
+  geom_col(aes(fill = I(newcolor), color = Category),
+           position = position_stack(reverse = FALSE),
+           ##remove the border 
+           linewidth = 0) +
+  geom_text(aes(label = total, group = Category),size = 8, color = "black",
+            fontface = 'bold', position = position_stack(vjust = .5, reverse = FALSE)) +
+  ## change the legend fill manually 
+  guides(color = guide_legend(
+    reverse = FALSE,
+    override.aes = list(fill = c("grey25", alpha("grey25", .5))))
+  ) +
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(size = 16, face = "bold", colour = "black"),
+    #axis.text.y = element_text(size = 10),
+    axis.text.y = element_text(size = 14, face = "bold", colour = "black"),
+    axis.ticks = element_blank())+
+  theme(strip.background=element_rect(fill='black', color = 'black'),
+        panel.spacing = unit(1.5, "lines"), 
+        strip.text.x=element_text(angle=0, hjust=0.5,vjust=0.5, size = 14,face = 'bold'),
+        plot.title = element_text(size=16, face = "bold.italic", color = 'black'),
+        axis.title.x = element_text(size=22, face="bold"),
+        axis.title.y = element_text(size=22, face="bold"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        #panel.border = element_blank(),
+        panel.spacing = unit(0.5, "lines"),
+        strip.text = element_text(face = "bold", size = 24,  angle = 0), 
+        strip.placement = "outside") +
+  theme(legend.text = element_text(face = "bold", size = 14),
+        legend.title = element_text(face = "bold", size = 16))+
+  theme(panel.spacing = unit(1.5, "lines")) +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) 
+
+p
+```
+
+## fig 7E, F, G
 ```{r}
 tab <- read.xlsx("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.xlsx")
 tab.down <- tab %>% 
