@@ -34,6 +34,14 @@ library(ComplexHeatmap)
 library(circlize)
 library(doParallel)
 library(edgeR)
+library(patchwork)
+library(doParallel)
+library(ggVennDiagram)
+library(viridis)
+library(MyEllipsefit)
+library(princurve)
+library(plotly)
+library(VennDiagram)
 
 
 
