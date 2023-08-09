@@ -222,6 +222,11 @@ write.xlsx(all.peak.genes.tab.wide, "../Input/toxo_cdc/rds_cutRun/cut_run_union_
 saveRDS(all.peak.genes.tab.wide, "../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_intensity_scores.rds")
 
 
+ggplot(tmp1, aes(x = intensity.mean)) + 
+  #geom_histogram(aes(y = ..density..),
+  #               colour = 1, fill = "white",binwidth = 1) +
+  geom_density(aes(fill = intersect, color = intersect), alpha=.4) +
+  theme_bw()
 
 all.peak.genes.tab.wide 
 p <- ggplot(all.peak.genes.tab.wide, aes(x = intensity.mean)) + 
