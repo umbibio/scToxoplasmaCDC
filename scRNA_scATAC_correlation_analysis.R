@@ -25,7 +25,6 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 sc.rna.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
 sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
-# cyclic.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
 # cyclic.genes <- cyclic.genes %>% dplyr::filter(rna.cyclic == 1 & atac.cyclic == 1)
 
 marker.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
