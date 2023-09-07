@@ -70,8 +70,8 @@ prod.disc <- left_join(prod.disc, GT1.ME49, by = c("GeneID" = "TGGT1")) %>% na.o
 prod.disc$TGME49 <- gsub('_', '-', prod.disc$TGME49)
 
 
-sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
-sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
+# sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
+# sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
 sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes_1.1.rds')
 sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes_1.1.rds')
@@ -147,15 +147,24 @@ stats$rna.cyclic<- ifelse(stats$rna.amp >= rna.amp.cutoff , 1, 0)
 atac.amp.cutoff <- quantile(stats$atac.amp, prob = 0.5)
 stats$atac.cyclic<- ifelse(stats$atac.amp >= atac.amp.cutoff , 1, 0)
 
+# cyclic.genes <- read.xlsx('../OutPut/toxo_cdc/ME49_59/tables/all_genes_cyclic_timing_KZ.xlsx')
+# stats <- cyclic.genes 
+
 stats.expressed <- stats %>% dplyr::filter(rna.expressed == 1)
 nrow(stats.expressed) / nrow(stats)
+nrow(stats.expressed)
+
 stats.cyclic.rna <- stats %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1)
 nrow(stats.cyclic.rna) / nrow(stats)
+nrow(stats.cyclic.rna) 
+
 stats.cyclic.atac <- stats %>% dplyr::filter(rna.expressed == 1, atac.cyclic == 1)
 nrow(stats.cyclic.atac)
-stats.cyclic.both <- stats %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1 & atac.cyclic == 1)
 
+stats.cyclic.both <- stats %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1 & atac.cyclic == 1)
 nrow(stats.cyclic.both) / nrow(stats)
+nrow(stats.cyclic.both)
+
 #stats$filt <- stats$expressed * stats$cyclic
 
 sum(stats$rna.cyclic) / nrow(stats)
@@ -176,3 +185,32 @@ write.xlsx(stats, '../Output/toxo_cdc/ME49_59/tables/all_genes_cyclic_timing.xls
 saveRDS(stats, '../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
 
 
+## plot 
+cyclic.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
+
+stats.cyclic.rna <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1) 
+nrow(stats.cyclic.rna) # of cyclic-expr
+stats.cyclic.atac <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, atac.cyclic == 1) 
+nrow(stats.cyclic.atac) # cyclic-atac
+stats.cyclic.both <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1 & atac.cyclic == 1)
+nrow(stats.cyclic.both) # cyclic - atac,expr
+
+
+pdf("../OutPut/toxo_cdc/ME49_59/figures_paper/cyclic_genes_rna_atac_fourier_based.pdf", width = 10, height = 10)
+venn.plot <- draw.pairwise.venn(
+  area1 = nrow(stats.cyclic.rna),
+  area2 = nrow(stats.cyclic.atac),
+  cross.area = nrow(stats.cyclic.both),
+  #category = c("ATAC", "C&R"),
+  fill = c("#AEC375","#ED9FF3"),
+  lty = rep("solid", 2),
+  lwd = 6,
+  col = c("#A9A133", "#EA3BF7"),
+  cex = 5.5,
+  cat.cex = 3,
+  ext.length = 0.9,
+  ext.line.lwd = 2.5,
+  
+)
+grid.draw(venn.plot)
+dev.off()
