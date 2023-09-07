@@ -840,3 +840,38 @@ plot(p)
 
 ```
 
+```{R}
+
+cyclic.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
+
+stats.cyclic.rna <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1) 
+nrow(stats.cyclic.rna) # of cyclic-expr
+stats.cyclic.atac <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, atac.cyclic == 1) 
+nrow(stats.cyclic.atac) # cyclic-atac
+stats.cyclic.both <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1 & atac.cyclic == 1)
+nrow(stats.cyclic.both) # cyclic - atac,expr
+
+
+
+venn.plot <- draw.pairwise.venn(
+  area1 = nrow(stats.cyclic.rna),
+  area2 = nrow(stats.cyclic.atac),
+  cross.area = nrow(stats.cyclic.both),
+  #category = c("ATAC", "C&R"),
+  fill = c("#C3D68B","#C3D68B"),
+  lty = rep("solid", 2),
+  lwd = 6,
+  col = c("#EDB7F3", "#EDB7F3"),
+  cex = 5.5,
+  cat.cex = 3,
+  ext.length = 0.9,
+  ext.line.lwd = 2.5,
+
+)
+grid.draw(venn.plot)
+
+
+```
+
+
+
