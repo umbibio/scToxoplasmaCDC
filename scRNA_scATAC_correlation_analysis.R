@@ -28,8 +28,6 @@ sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline
 # cyclic.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
 # cyclic.genes <- cyclic.genes %>% dplyr::filter(rna.cyclic == 1 & atac.cyclic == 1)
 
-cyclic.genes <- read.xlsx('../OutPut/toxo_cdc/ME49_59/tables/all_genes_cyclic_timing_KZ.xlsx')
-cyclic.genes <- cyclic.genes %>% dplyr::filter(rna.cyclic == 1 & atac.cyclic == 1)
 
 marker.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
 marker.genes.phase <- marker.genes %>% transmute(GeneID = gene, phase = cluster) %>% distinct()
