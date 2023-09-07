@@ -181,7 +181,6 @@ stats$rna.constitutive <- ifelse(stats$rna.expressed == 1 & stats$rna.cyclic == 
 stats$atac.constitutive <- ifelse(stats$atac.expressed == 1 & stats$atac.cyclic == 0, 1, 0)
 
 write.xlsx(stats, '../Output/toxo_cdc/ME49_59/tables/all_genes_cyclic_timing.xlsx')
-
 saveRDS(stats, '../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
 
 
