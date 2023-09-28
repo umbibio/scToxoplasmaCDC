@@ -6,7 +6,7 @@ library(openxlsx)
 
 ## IDs
 
-prod.desc  <- read.xlsx('../Input_sub/Toxo_genomics/genes/ProductDescription_M')
+prod.desc  <- read.xlsx('../Input_sub/Toxo_genomics/genes/ProductDescription_ME49.xlsx')
 ribosomals <- prod.desc[grep('ribosomal', prod.desc$ProductDescription),]
 
 ## NOTES: 
