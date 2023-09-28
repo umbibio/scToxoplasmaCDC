@@ -114,6 +114,19 @@ all.motifs.tab.genes <- all.motifs.tab.genes[!is.na(all.motifs.tab.genes$motif),
 
 length(unique(all.motifs.tab.genes$TGME49[!is.na(all.motifs.tab.genes$motif)])) 
 
+
+## ribosomal genes 
+AP2XII8_ribo_TATA <- all.motifs.tab.genes 
+AP2XII8_ribo_TATA <- AP2XII8_ribo_TATA %>% 
+  dplyr::select(TGME49, motif, pattern, intersection_CutRun_dataSets,KD_vs_WT_phase_based, new.name, 
+                ProductDescription.y) %>%
+  distinct()
+AP2XII8_ribo_TATA %>% group_by(motif) %>% 
+  summarise(num.genes = length(unique(TGME49)),
+            percent.genes = length(unique(TGME49)) /length(unique(all.motifs.tab.genes$TGME49)))
+
+write.xlsx(AP2XII8_ribo_TATA, "../OutPut/toxo_cdc/ME49_59/tables/AP2XII8_ribosomals_TATA_motif.xlsx")
+
 ## NEW
 ## TSS dist 
 all.motifs.tab.genes.motif <- all.motifs.tab.genes %>% 
@@ -208,6 +221,7 @@ ggsave(filename="../Output/toxo_cdc/ME49_59/figures_paper/ribo_motifs/motif_toto
 ss <- all.motifs.tab.genes %>% group_by(motif) %>% 
   summarise(num.genes = length(unique(TGME49)), 
             percent.genes = length(unique(TGME49)) /length(unique(all.motifs.tab.genes$TGME49)))
+
 
 ss$motif <- gsub('motif_', 'm', ss$motif)
 p2 <- ggplot(data = ss, aes(x = motif, y = percent.genes, colour = motif, fill = motif)) + 
