@@ -400,7 +400,14 @@ write.xlsx(cut.run.tab, "../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_pea
 write.xlsx(cut.run.tab, "../OutPut/toxo_cdc/ME49_59/tables/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.xlsx")
 saveRDS(cut.run.tab, "../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
 
-
+## modify supplementary table 
+cut.run.tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
+cut.run.tab <- cut.run.tab %>% mutate(MOTIF = case_when(motif == "motif_1" ~ "motif_2", 
+                                                        motif == "motif_2" ~ "motif_1"))
+cut.run.tab.supplmnt <- cut.run.tab %>% 
+  dplyr::select(id, chr, start_peak, end_peak, V4, V5, V6,TGME49, assigned_to_CutRun_peaks,
+         intersection_CutRun_dataSets, MOTIF, KD_vs_WT_phase_based, ProductDescription, new.name, Category)
+write.xlsx(cut.run.tab.supplmnt, "../OutPut/toxo_cdc/ME49_59/tables/Supplement/cut_run_peak_gene_assignement_supplement.xlsx")
 ## motif table summary
 
 tab <- read.xlsx("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.xlsx")
