@@ -9,13 +9,9 @@ library(geomtextpath)
 library(ggVennDiagram)
 
 
-
-
 source('./util_funcs.R')
 
-## For parallel calculations
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
-
 
 
 getCurvePeakLoc <- function(t, y, prob = 0.8){
@@ -79,15 +75,6 @@ sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spli
 ## Phase-based DEGs
 Intra.markers.sig <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
 
-## AP2s
-
-AP2s <- read.xlsx('../Input_sub/Toxo_genomics/genes/TF_Info_Updated_kz.xlsx', sheet = 1)
-AP2s <- AP2s[grep("AP2", AP2s$Ap2Name),c(1,2)]
-AP2s <- left_join(AP2s, GT1.ME49, by = c('GeneID' = 'TGGT1'))
-AP2s$GeneID <- gsub('_', '-', AP2s$TGME49)
-
-
-
 
 
 genes <- unique(sc.rna.genes.expr.pt$GeneID)
@@ -147,9 +134,6 @@ stats$rna.cyclic<- ifelse(stats$rna.amp >= rna.amp.cutoff , 1, 0)
 atac.amp.cutoff <- quantile(stats$atac.amp, prob = 0.5)
 stats$atac.cyclic<- ifelse(stats$atac.amp >= atac.amp.cutoff , 1, 0)
 
-# cyclic.genes <- read.xlsx('../OutPut/toxo_cdc/ME49_59/tables/all_genes_cyclic_timing_KZ.xlsx')
-# stats <- cyclic.genes 
-
 stats.expressed <- stats %>% dplyr::filter(rna.expressed == 1)
 nrow(stats.expressed) / nrow(stats)
 nrow(stats.expressed)
@@ -165,51 +149,9 @@ stats.cyclic.both <- stats %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1
 nrow(stats.cyclic.both) / nrow(stats)
 nrow(stats.cyclic.both)
 
-#stats$filt <- stats$expressed * stats$cyclic
-
 sum(stats$rna.cyclic) / nrow(stats)
 
 
 
 
-## DEGs
-all(Intra.markers.sig$gene %in% stats$GeneID[stats$rna.cyclic == 1])
-length(unique(Intra.markers.sig$gene))
 
-
-stats$rna.constitutive <- ifelse(stats$rna.expressed == 1 & stats$rna.cyclic == 0, 1, 0)
-stats$atac.constitutive <- ifelse(stats$atac.expressed == 1 & stats$atac.cyclic == 0, 1, 0)
-
-write.xlsx(stats, '../Output/toxo_cdc/ME49_59/tables/all_genes_cyclic_timing.xlsx')
-saveRDS(stats, '../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
-
-
-## plot 
-cyclic.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
-
-stats.cyclic.rna <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1) 
-nrow(stats.cyclic.rna) # of cyclic-expr
-stats.cyclic.atac <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, atac.cyclic == 1) 
-nrow(stats.cyclic.atac) # cyclic-atac
-stats.cyclic.both <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1 & atac.cyclic == 1)
-nrow(stats.cyclic.both) # cyclic - atac,expr
-
-
-pdf("../OutPut/toxo_cdc/ME49_59/figures_paper/cyclic_genes_rna_atac_fourier_based.pdf", width = 10, height = 10)
-venn.plot <- draw.pairwise.venn(
-  area1 = nrow(stats.cyclic.rna),
-  area2 = nrow(stats.cyclic.atac),
-  cross.area = nrow(stats.cyclic.both),
-  #category = c("ATAC", "C&R"),
-  fill = c("#AEC375","#ED9FF3"),
-  lty = rep("solid", 2),
-  lwd = 6,
-  col = c("#A9A133", "#EA3BF7"),
-  cex = 5.5,
-  cat.cex = 3,
-  ext.length = 0.9,
-  ext.line.lwd = 2.5,
-  
-)
-grid.draw(venn.plot)
-dev.off()
