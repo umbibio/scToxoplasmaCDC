@@ -41,7 +41,7 @@ rna.sig.markers.rna.trans <- left_join(rna.sig.markers.rna.trans, prod.desc, by 
 rna.sig.markers.rna.trans <- rna.sig.markers.rna.trans %>% 
   mutate(new.prod.desc = ifelse(ProductDescription == "hypothetical protein" & !is.na(new.name), new.name, ProductDescription))
 
-ss.rna <- rna.sig.markers.rna.trans %>% group_by(cluster) %>% summarise(num.DEG = n())
+ss <- rna.sig.markers.rna.trans %>% group_by(cluster) %>% summarise(num.DEG = n())
 
 
 
