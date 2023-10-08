@@ -1,4 +1,4 @@
-# Pseudo-time
+
 
 library(slingshot)
 library(gam)
