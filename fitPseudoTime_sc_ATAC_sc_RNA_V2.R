@@ -1,4 +1,5 @@
-#### Pseudo-time
+# Pseudo-time
+
 library(slingshot)
 library(gam)
 library(princurve)
@@ -16,7 +17,8 @@ source('./loadlb.R')
 
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
-## Fit a pseudo-time curve and align using sync data
+# Fit a pseudo-time curve and align using sync data
+
 S.O.integrated <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_integrated.rds')
 S.O.integrated@meta.data$Sample <- rownames(S.O.integrated@meta.data)
 Idents(S.O.integrated) <- 'orig.ident'
@@ -24,7 +26,7 @@ Idents(S.O.integrated) <- 'orig.ident'
 atac_sub <- subset(S.O.integrated, ident = 'scATAC')
 rna_sub <- subset(S.O.integrated, ident = 'scRNA')
 
-## run the following line of codes for rna and atac one at a time 
+# Run the following for rna and atac data one at a time 
 
 S.O <- rna_sub
 S.O <- atac_sub
@@ -50,24 +52,27 @@ sds.data$pt <- 6 * ((as.numeric(pt) - min(as.numeric(pt)))/(max(as.numeric(pt)) 
 
 plot(sds.data$phase, sds.data$pt)
 
-## if the order of pseudo-times is reversed run the follwing line 
-## reverse means that pt of C (real-time) is smaller that M or S, i.e.
+## If the order of pseudo-times is reversed run the following  
+## reverse means that pt of C (real-time) is smaller than M or S
 
 if(reverse.t){
   sds.data$pt <- 6 - sds.data$pt
 }
 
 # Shift the time to start at G1.a
+
 tmp <- sds.data %>% dplyr::filter(phase == 'G1.a') %>% arrange(pt)
 lag.time <- tmp$pt[which.max((tmp$pt[2:length(tmp$pt)] - tmp$pt[1:(length(tmp$pt) - 1)])) + 1]
 lag.time <- quantile(tmp$pt, p = 0.205) ## excluse the ones overlapping with G1.b
 
 sds.data$pt <- (sds.data$pt - lag.time + 6) %% 6
 
-## check if the pt of cells are in order from 0 - 6 hrs
+# Check if the pt of cells are in order from 0 - 6 hrs
+
 plot(sds.data$phase, sds.data$pt)
 
 # Removing outliers in C and G1.a
+
 outlier.c <- sds.data$Sample[(sds.data$phase == "C" & sds.data$pt < 1)]
 sds.data$phase[(sds.data$phase == "C" & sds.data$pt < 1)] <- 'G1.a'
 outlier.G1a <- sds.data$Sample[(sds.data$phase == "G1.a" & sds.data$pt > 4)]
@@ -89,7 +94,8 @@ points(sds.data$PC_1, sds.data$PC_2, cex = 0.6, col = sds.data$phase, pch = 20)
 points(sds.data$sc1[sds.data$cell.ord],sds.data$sc2[sds.data$cell.ord], cex = 0.2, col = 'red')
 
 
-# Scale the pt based on know biology: Radke et. al 2000
+# Scale the pt based on known biology: Radke et. al 2000
+
 G <- c(0, 3) # 3h
 S <- c(3, 4.7) # 1.7h
 M <- c(4.7, 5) # ~20 min
@@ -129,11 +135,13 @@ sds.data <- sds.data %>%
 plot(sds.data$phase, sds.data$pt.shifted.scaled)
 
 ## Exclude outlier samples
+
 #q.ex <- quantile(sds.data$pt.shifted.scaled, p = 0.998)
 q.ex <- 6.5
 sds.data <- sds.data %>% dplyr::filter(pt.shifted.scaled <= q.ex)
 
 ## Rescale to [0, 6]
+
 sds.data$pt.shifted.scaled <- 6 * ((sds.data$pt.shifted.scaled - min(sds.data$pt.shifted.scaled))/
                                      (max(sds.data$pt.shifted.scaled) - min(sds.data$pt.shifted.scaled)))
 plot(sds.data$phase, sds.data$pt.shifted.scaled)
@@ -150,7 +158,8 @@ genes.df <- data.frame(GeneID = rownames(genes.expr),
                        genes.expr) %>%
   pivot_longer(-c(GeneID), names_to = 'Sample', values_to = 'log2.expr')
 
-## for atac
+# for atac
+
 if(method == 'atac'){
   genes.df$Sample <- gsub('\\.', '-', genes.df$Sample)
 }
@@ -160,23 +169,10 @@ genes.df <- inner_join(genes.df, sds.data, by = 'Sample')
 sds.data <- as.data.frame(sds.data)
 rownames(sds.data) <- sds.data$Sample
 
-## Add the new clusters as meta-data
-S.O.filt <- AddMetaData(S.O.filt, sds.data)
+# Add the new clusters as meta-data
 
+S.O.filt <- AddMetaData(S.O.filt, sds.data)
 
 L <- list(sds.data = sds.data, genes.df = genes.df,
           S.O = S.O.filt)
-
-## save the objects
-L.rna <- L
-L.atac <- L
-
-saveRDS(L.rna$genes.df, '../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_genes_expr_pt.rds')
-saveRDS(L.atac$genes.df, '../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
-
-saveRDS(L.rna$sds.data, '../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_sds_data.rds')
-saveRDS(L.atac$sds.data, '../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_sds_data.rds')
-
-saveRDS(L.rna$S.O, '../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
-saveRDS(L.atac$S.O, '../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 
