@@ -5,7 +5,7 @@ source('./loadlb.R')
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 
-## Count files
+# Count files
 intra.file.csv <- "../Input_sub/toxo_scRNA_MJ_ME49_59/RH.intra.expr.csv"
 
 ## IDs
@@ -30,7 +30,7 @@ intra.counts <- getExpr(intra.file.csv, TGGT1_ME49)
 dim(intra.counts)
 
 
-##  Seurat objects
+# create Seurat objects
 feats <- c("nFeature_RNA","nCount_RNA")
 
 S.O.intra <- CreateSeuratObject(counts = intra.counts)
@@ -49,7 +49,7 @@ S.O <- prep_S.O(S.O, res = 0.4)
 DimPlot(S.O)
 
 
-############################################################
+# Transfer cell cycle phase lables from available data https://elifesciences.org/articles/54129
 
 S.O.list <- list(intra = S.O.intra)
 
