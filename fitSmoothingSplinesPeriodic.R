@@ -3,7 +3,7 @@ library(openxlsx)
 library(doParallel)
 library(npreg)
 
-## For parallel calculations
+
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 
@@ -13,12 +13,13 @@ sc.rna.genes.expr.pt <- readRDS('../input_sub/toxo_cdc/rds_ME49_59/sc_rna_genes_
 sc.atac.genes.expr.pt <- readRDS('../input_sub/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
 
 
-## Common genes between the data sets
+# Common genes between the data sets
+
 comm.genes <- intersect(unique(sc.rna.genes.expr.pt$GeneID), unique(sc.atac.genes.expr.pt$GeneID))
 
 
+# Expression
 
-## Expression
 lbx <- 1.1
 sc.rna.spline.fits <- mclapply(1:length(comm.genes), function(i){
   tmp <- sc.rna.genes.expr.pt %>% dplyr::filter(GeneID == comm.genes[i]) %>%
@@ -57,9 +58,8 @@ sc.rna.spline.fits <- mclapply(1:length(comm.genes), function(i){
 
 sc.rna.spline.fits <- bind_rows(sc.rna.spline.fits)
 
-saveRDS(sc.rna.spline.fits, '../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes_1.1.rds')
+# Access
 
-## Access
 lbx <- 1.1
 sc.atac.spline.fits <- mclapply(1:length(comm.genes), function(i){
   tmp <- sc.atac.genes.expr.pt %>% dplyr::filter(GeneID == comm.genes[i]) %>%
@@ -94,5 +94,4 @@ sc.atac.spline.fits <- mclapply(1:length(comm.genes), function(i){
 
 sc.atac.spline.fits <- bind_rows(sc.atac.spline.fits)
 
-saveRDS(sc.atac.spline.fits, '../input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes_1.1.rds')
 
