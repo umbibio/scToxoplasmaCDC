@@ -31,6 +31,7 @@ dim(intra.counts)
 
 
 # create Seurat objects
+
 feats <- c("nFeature_RNA","nCount_RNA")
 
 S.O.intra <- CreateSeuratObject(counts = intra.counts)
@@ -49,7 +50,7 @@ S.O <- prep_S.O(S.O, res = 0.4)
 DimPlot(S.O)
 
 
-# Transfer cell cycle phase lables from available data https://elifesciences.org/articles/54129
+# Transfer cell cycle phase labels from available data https://elifesciences.org/articles/54129
 
 S.O.list <- list(intra = S.O.intra)
 
@@ -72,5 +73,5 @@ S.Os <- lapply(1:length(S.Os), function(i){
 })
 
 
-saveRDS(S.Os[[1]], '../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_lables.rds')
+
 
