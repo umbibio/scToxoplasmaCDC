@@ -7,7 +7,7 @@ library(npreg)
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 
-## Read in the data.
+# Read in the data
 
 sc.rna.genes.expr.pt <- readRDS('../input_sub/toxo_cdc/rds_ME49_59/sc_rna_genes_expr_pt.rds')
 sc.atac.genes.expr.pt <- readRDS('../input_sub/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
