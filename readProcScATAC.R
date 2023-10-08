@@ -27,14 +27,14 @@ library(Seurat)
 
 source('./util_funcs.R')
 
-## Read scRAN-Seq data and convert TGGT1 Ids to TGME49
+# Read scRAN-Seq data and convert TGGT1 Ids to TGME49
 S.O <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_lables.rds')
 
-## IDs
+# IDs
 prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
 TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
-## Map to ME49
+# Map to ME49 
 counts = S.O@assays$RNA@counts
 rownames(counts) <- gsub('_', '-', TGGT1_ME49$TGME49[match(gsub('-', '_', rownames(counts)), TGGT1_ME49$TGGT1)])
 
