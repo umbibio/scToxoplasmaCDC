@@ -24,7 +24,7 @@ gtf <- read.table(gtf.file, header = F, sep = '\t', quote = NULL)
 gtf.filt <- gtf %>% dplyr::filter(!grepl('KE.*', V1))
 
 
-# Remove the first Exon from transcripts.
+# remove the first Exon from transcripts.
 
 gtf.exon <- gtf.filt %>% dplyr::filter(V3 == 'exon')
 gtf.exon.sort <- gtf.exon %>% arrange(V1, V4, V5)
@@ -36,7 +36,7 @@ gtf.exon <- gtf.exon %>% group_by(V9) %>% mutate(exon.ord = ifelse(V7 == '+', 1:
                                                  multiple.exon = ifelse(n() > 1, T, F))
 
                                                   
-# Remove the exon1, but keep the Intron 1 , build exon2ton
+# remove the exon1, but keep the Intron 1 , build exon2ton
                                                   
 gtf.exon.2Ton <- gtf.exon %>% mutate(V10 = ifelse(multiple.exon & V7 == '-', min(V4), 
                                                   ifelse(multiple.exon & V7 == '+', min(V5), V4)),
@@ -67,7 +67,7 @@ gtf.filt.trn$gene_name <- gsub("\\;.*", "", gsub("transcript_id ", "", gsub("-t.
 gtf.filt.trn$gene_name <- gsub("\"", "", gtf.filt.trn$gene_name)
 
 
-# Filter for first exon coordinates (exon1 coordinates)
+# filter for first exon coordinates (exon1 coordinates)
                                                   
 tmp.neg <- gtf.exon %>% filter(V7 == "-") %>% group_by(V9) %>%  dplyr::slice(which.max(V5))
 tmp.pos <- gtf.exon %>% filter(V7 == "+") %>% group_by(V9) %>%  dplyr::slice(which.min(V5))
@@ -75,7 +75,7 @@ gtf.exon1 <- bind_rows(tmp.pos, tmp.neg)
 gtf.exon1.sort <- gtf.exon1 %>% arrange(V1, V4, V5)
 
 
-# Assign the peaks to the nearest upstream gene (look at the 5 closest in case of bi-directional)
+# assign the peaks to the nearest upstream gene (look at the 5 closest in case of bi-directional)
 
 peaks.genes.dist <- bedtoolsr::bt.closest(a = peak.filt.sort, b = gtf.exon1.sort, D = "b", k = 5)
 parse.str2 <- strsplit(peaks.genes.dist$V13, split = ';')
@@ -101,15 +101,15 @@ peaks.genes.dist.trns <- peaks.genes.dist.trns %>% group_by(V4.x) %>%
   mutate(V17 = V16[which.min(abs(V16))])
 
 
-# Filter the rest
+# filter the rest
 peaks.genes.dist.trns <- peaks.genes.dist.trns %>% dplyr::filter(V16 == V17)
 
-# Filter the ones that are too far (3000 bp)
+# filter the ones that are too far (3000 bp)
 peaks.genes.dist.trns.filt <- peaks.genes.dist.trns %>% dplyr::filter(abs(V16) < 3000)
 
 
 # prep bed format 
-# Merge multiple peaks assigned to a single gene
+# merge multiple peaks assigned to a single gene
 
 peak.genes <- read.xlsx("../Input_sub/toxo_scATAC_MJ_ME49_59/scATAC_peaks_genes_assigned.xlsx")
 peak.genes <- peak.genes %>% dplyr::select(V1.x, V2.x, V3.x, V11, gene_name) 
