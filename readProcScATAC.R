@@ -92,9 +92,8 @@ isCircular(tx_trans) <- rep(F, length(isCircular(tx_trans)))
 
 seqinfo(tx_trans)
 
-saveRDS(tx_trans, "../Input_sub/toxo_cdc/rds_ME49_59/ME49_tx_trans_granges.rds")
 
-## Now read scATAC data from cellranger 
+## read scATAC data from cellranger 
 counts <- Read10X_h5(filename = "../Input_sub/toxo_scATAC_MJ_ME49_59/filtered_peak_bc_matrix.h5")
 metadata <- read.csv(
   file = "../Input_sub/toxo_scATAC_MJ_ME49_59/singlecell.csv",
@@ -132,7 +131,7 @@ Tg_ATAC <- NucleosomeSignal(object = Tg_ATAC)
 Tg_ATAC <- TSSEnrichment(object = Tg_ATAC, fast = FALSE)
 
 
-# add blacklist ratio and fraction of reads in peaks
+# add blacklist ratio and a fraction of reads in peaks
 Tg_ATAC$pct_reads_in_peaks <- Tg_ATAC$peak_region_fragments / Tg_ATAC$passed_filters * 100
 Tg_ATAC$blacklist_ratio <- Tg_ATAC$blacklist_region_fragments / Tg_ATAC$peak_region_fragments
 
@@ -172,7 +171,7 @@ Tg_ATAC <- RunSVD(Tg_ATAC)
 
 DepthCor(Tg_ATAC)
 
-## Must remove highly correlating components
+## remove highly correlating components
 Tg_ATAC <- RunUMAP(object = Tg_ATAC, reduction = 'lsi', dims = seq(1:30)[-c(1,3)])
 Tg_ATAC <- FindNeighbors(object = Tg_ATAC, reduction = 'lsi', dims = seq(1:30)[-c(1,3)])
 Tg_ATAC <- FindClusters(object = Tg_ATAC, verbose = FALSE, algorithm = 3)
@@ -180,8 +179,7 @@ Tg_ATAC <- FindClusters(object = Tg_ATAC, verbose = FALSE, algorithm = 3)
 
 DimPlot(object = Tg_ATAC, label = TRUE, reduction = 'umap') + NoLegend()
 
-## estimate RNA levels from atac-seq 
-## this is needed when we integrate with scRNA - WT which is our reference
+## Estimate RNA levels from atac-seq 
 
 DefaultAssay(Tg_ATAC) <- "peaks"
 gene.activities <- GeneActivity(Tg_ATAC, extend.upstream = 600,
@@ -197,11 +195,8 @@ S.O.ATAC <- NormalizeData(
   scale.factor = median(S.O.ATAC$nCount_RNA)
 )
 
-saveRDS(S.O.ATAC, '../Input_sub/toxo_cdc/rds_ME49_59/S.O_ATAC_not_integrated_not_down_samples.rds')
-S.O.ATAC <- readRDS( '../Input_sub/toxo_cdc/rds_ME49_59/S.O_ATAC_not_integrated_not_down_samples.rds')
 
-
-## integrate with scRNA
+## Integrate with scRNA
 
 DefaultAssay(S.O.ATAC) <- 'RNA'
 S.O.ATAC <- FindVariableFeatures(S.O.ATAC, selection.method = "vst", nfeatures = 6000)
@@ -263,10 +258,6 @@ p <- DimPlot(S.O.integrated, reduction = "pca",
 plot(p)
 
 
-
-saveRDS(S.O.integrated, '../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_integrated.rds')
-
-## new
 Tg_ATAC[['RNA']] <- CreateAssayObject(counts = gene.activities)
 
 Tg_ATAC <- NormalizeData(
@@ -276,9 +267,7 @@ Tg_ATAC <- NormalizeData(
   scale.factor = median(Tg_ATAC$nCount_RNA)
 )
 
-DefaultAssay(Tg_ATAC) <- 'RNA'
-
-## For PCA
+                    
 DefaultAssay(Tg_ATAC) <- 'RNA'
 Tg_ATAC <- FindVariableFeatures(Tg_ATAC, selection.method = "vst", nfeatures = 2000)
 
@@ -289,66 +278,6 @@ Tg_ATAC <- FindNeighbors(Tg_ATAC, dims = 1:10, reduction = 'pca')
 Tg_ATAC <- FindClusters(Tg_ATAC, resolution = 0.2)
 Tg_ATAC <- RunTSNE(object = Tg_ATAC,features = VariableFeatures(object = Tg_ATAC) )
 DimPlot(object = Tg_ATAC, reduction = "tsne", label = TRUE) + NoLegend()
-
-
-## Coverage Browser
-
-Tg_ATAC <- AddMetaData(Tg_ATAC, atac_sub@meta.data)
-#levels(Tg_ATAC) <- c("CD4 Naive","CD4 Memory","CD8 Naive","CD8 Effector","DN T","NK CD56bright","NK CD56Dim","pre-B",'pro-B',"pDC","DC","CD14 Mono",'CD16 Mono')
-Idents(Tg_ATAC) <- 'phase'
-
-##Find Markers
-DefaultAssay(Tg_ATAC) <- 'peaks'
-da_peaks <- FindAllMarkers(
-  object = Tg_ATAC,
-  only.pos = T,
-  min.pct = 0.2,
-  test.use = 'LR',
-  latent.vars = 'peak_region_fragments'
-)
-
-head(da_peaks)
-
-plot1 <- VlnPlot(
-  object = Tg_ATAC,
-  features = rownames(da_peaks)[1],
-  pt.size = 0.4,
-  idents = c("G1.a","G1.b", 'S', 'M', 'C')
-)
-
-plot2 <- FeaturePlot(
-  object = Tg_ATAC,
-  features = rownames(da_peaks)[1],
-  reduction = 'pca',
-  pt.size = 0.4
-)
-
-plot1 | plot2
-
-head(da_peaks)
-
-top.da <- da_peaks %>% group_by(cluster) %>% slice_max(n = 1, order_by = avg_log2FC)
-#region <- StringToGRanges(regions = gsub('TGME49-', 'TGME49_', top.da$gene[4]),  sep = c("-", "-"))
-#region <- StringToGRanges(regions = gsub('TGME49-', 'TGME49_', rownames(da_peaks)[5]),  sep = c("-", "-"))
-
-xx <- findOverlaps(region, tx_trans)
-tx_trans[xx@to]$gene_id
-
-my.gene <- tx_trans[xx@to]$gene_id[1]
-
-DefaultAssay(Tg_ATAC) <- 'RNA'
-
-DefaultAssay(atac_sub) <- "RNA"
-p1 <- FeaturePlot(
-  object = atac_sub,
-  features = gsub('_', '-', my.gene),
-  pt.size = 0.4,
-  max.cutoff = 'q0',
-  ncol = 1,
-  reduction = 'pca'
-)
-
-plot(p1)
 
 
 saveRDS(Tg_ATAC, '../Input_sub/toxo_cdc/rds_ME49_59/S.O_ATAC_peak.rds')
