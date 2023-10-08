@@ -136,7 +136,6 @@ plot(sds.data$phase, sds.data$pt.shifted.scaled)
 
 ## Exclude outlier samples
 
-#q.ex <- quantile(sds.data$pt.shifted.scaled, p = 0.998)
 q.ex <- 6.5
 sds.data <- sds.data %>% dplyr::filter(pt.shifted.scaled <= q.ex)
 
