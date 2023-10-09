@@ -18,6 +18,7 @@ source('./util_funcs.R')
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 ## Count files AP2XII-8 KD
+
 intra.file.csv <- "../Input_sub/toxo_scRNA_AP2XII8_KD_230327/AP2XII8_KD.expr.csv"
 
 ## IDs
@@ -25,7 +26,8 @@ prod.desc  <- read.xlsx('../input_sub/toxo_genomics/genes/ProductDescription_GT1
 TGGT1_ME49 <- read.xlsx('../input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 
-# expression mtx with TGGT1 IDs (needed later for transfering lables from public data- Bootroyed)
+# Expression matrix with TGGT1 IDs 
+
 getExpr <- function(in.file, TGGT1_ME49){
   file.counts <- read.csv(in.file)
   genes <- file.counts$X
@@ -43,10 +45,10 @@ intra.counts <- getExpr(intra.file.csv, TGGT1_ME49)
 dim(intra.counts)
 
 
-## individual Seurat objects
+## Individual Seurat objects
 feats <- c("nFeature_RNA","nCount_RNA")
 
-# Intra
+
 S.O.intra <- CreateSeuratObject(counts = intra.counts)
 S.O.intra$orig.ident <- 'intra'
 VlnPlot(S.O.intra, features = feats, pt.size = 0.1,ncol = 2) + NoLegend()
@@ -58,7 +60,7 @@ dim(S.O.intra@assays$RNA@data)
 
 S.O.list <- list(intra = S.O.intra)
 
-## Downsample to 8000 cells
+
 set.seed(100)
 S.O.list <- mclapply(S.O.list, function(S.O){
   S.O <- subset(x = S.O, downsample = 8000)
@@ -66,11 +68,12 @@ S.O.list <- mclapply(S.O.list, function(S.O){
 
 
 
-## transfer labels from Bootroyed
+## Transfer labels from Bootroyed
 
 S.O.tg.boothroyd <- readRDS('../input_sub/toxo_cdc/rds_ME49_59/S.O.tg_RH_boothroyd.rds')
 
-## split the data, process each, transfer the lables (here we have only one data)
+## Split the data, process each, and transfer the labels 
+
 S.Os <- mclapply(S.O.list, function(S.O){
   S.O <- prep_S.O(S.O, res = 0.4)
   anchors <- FindTransferAnchors(reference = S.O.tg.boothroyd, query = S.O, dims = 1:30)
@@ -87,14 +90,6 @@ S.Os <- lapply(1:length(S.Os), function(i){
   S.Os[[i]]@meta.data$spp <- spps[i]
   S.Os[[i]]
 })
-
-#  plots for testing
-
-DimPlot(S.Os[[1]], reduction = "pca")
-DimPlot(S.Os[[1]], reduction = "umap")
-
-
-saveRDS(S.Os[[1]], '../input_sub/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed_TGGT1.rds')
 
 
 # convert TGGT1 IDs to ME49
@@ -120,7 +115,6 @@ DimPlot(S.O.KD, reduction = 'pca')
 S.O.KD@reductions$pca@cell.embeddings[,2] <- -1 * S.O.KD@reductions$pca@cell.embeddings[,2]
 S.O.KD@reductions$umap@cell.embeddings[,2] <- -1 * S.O.KD@reductions$umap@cell.embeddings[,2]
 
-saveRDS(S.O.KD, '../input_sub/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
 
 pca = S.O.KD[["pca"]]
 eigValues = (pca@stdev)^2  ## EigenValues
@@ -128,9 +122,8 @@ varExplained = eigValues / sum(eigValues)
 sum(varExplained)
 
 
-## WT - convert TGGT1 IDs to ME49
-## rna-WT with already transferred lables from bootroyed will be used as reference 
-## for integration of WT and KD
+## Convert TGGT1 IDs to ME49 (WT)
+## rna-WT with already transferred lables from Bootroyed is used as reference 
 
 S.O <- readRDS('../input_sub/toxo_cdc/rds_ME49_59/S.O.intra_lables.rds')
 prod.desc  <- read.xlsx('../input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
@@ -153,9 +146,5 @@ Idents(S.O.ref) <- "phase"
 DimPlot(S.O.ref, reduction = 'umap',
         cols = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05', 'M' = '#6f883a', 'C' = '#b138ee'))
 
-#S.O.ref@reductions[["umap"]]@cell.embeddings[,2] <- -S.O.ref@reductions[["umap"]]@cell.embeddings[,2]
-
-
-saveRDS(S.O.ref, "../input_sub/toxo_cdc/rds_ME49_59/S.O.rna.WT_labels.rds")
 
 
