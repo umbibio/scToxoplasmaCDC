@@ -30,14 +30,11 @@ source('./util_funcs.R')
 
 S.O.integrated <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/S.O.integrated_rna_WT_AP2XII8KD_reference_rna_WT_transferred_lables_from_boot.rds")
 
-
-
-##  description and name of genes which we add later to our genes of interest
 prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
 TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 
-# MArker analysis - KD vs WT (global)
+# Marker analysis - KD vs WT (Global)
 
 Idents(S.O.integrated.rna) <- "orig.ident"
 unique(Idents(S.O.integrated.rna))
