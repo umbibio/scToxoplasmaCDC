@@ -114,8 +114,8 @@ KD.vs.WT.phase.marker.sig$dir[KD.vs.WT.phase.marker.sig$ref.spp == "scRNA_KD"] <
 KD.vs.WT.phase.marker.sig.desc <- left_join(KD.vs.WT.phase.marker.sig, prod.desc,
                                             by = c("GeneID" = "TGME49"))
 
-# Turn data to wide format 
-# assig up-regulated, down-regulated, modulated
+
+# Assig up-regulated, down-regulated, modulated
 
 KD.vs.WT.phase.marker.sig.desc.wide <- KD.vs.WT.phase.marker.sig.desc %>% dplyr::select(GeneID, group, phase)
 KD.vs.WT.phase.marker.sig.desc.wide <- KD.vs.WT.phase.marker.sig.desc.wide %>% pivot_wider(names_from =  phase, values_from = group)
