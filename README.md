@@ -1,6 +1,6 @@
 # scToxoplasmaCDC
 
-## This page provides instructions for running statistical analysis on scRNA-Seq data of Babesia species. The analysis is as follows:
+## This page provides instructions for running statistical analysis on scRNA-Seq and scATAC-Seq data of replicating tachyzoites. The analysis is as follows:
 
 * Single-cell RNA-seq data processing
 * Single-Cell ATAC-seq data processing
