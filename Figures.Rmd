@@ -17,7 +17,7 @@ source("./loadlb.R")
 ```
 
 
-## Fig 2A
+## Fig 1A
 ```{r}
 ##
 
@@ -52,7 +52,7 @@ plot(p1)
 ```
 
 
-## Fig2 B, umap - rna
+## Fig1 B, umap - rna
 ```{r}
 
 sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_genes_expr_pt.rds')
@@ -82,7 +82,7 @@ points(rna.sds.data$sc1[rna.sds.data$cell.ord],-rna.sds.data$sc2[rna.sds.data$ce
           
 ```
 
-## Fig2 B, ggplot version - pca -rna
+## Fig1 B, ggplot version - pca -rna
 ```{r}
 S.O.rna  <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
 S.O.rna@meta.data$spp2 <- S.O.rna@meta.data$spp
@@ -119,7 +119,7 @@ plot(p1)
 ```
 
 
-## fig 2C, - umap atac
+## fig 1C, - umap atac
 ```{r}
 S.O.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 S.O.atac@meta.data$spp2 <- "atac"
@@ -155,7 +155,7 @@ plot(p1)
 ```
 
 
-## fig 2D, pca - atac
+## fig 1D, pca - atac
 ```{r}
 
 sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
@@ -185,7 +185,7 @@ points(atac.sds.data$sc1[atac.sds.data$cell.ord],-atac.sds.data$sc2[atac.sds.dat
           
 
 ```
-## Fig 2D - ggplot version 
+## Fig 1D - ggplot version 
 
 ```{r}
 S.O.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
@@ -223,7 +223,7 @@ plot(p1)
 
 ```
 
-## fig 2E
+## excluded from the paper
 
 ```{r}
 ## box plot - distribution of cells within each phase
@@ -251,7 +251,7 @@ p
 
 ```
 
-## fig 2F
+## fig 1F
 
 ```{r}
 rna.sds.data <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_sds_data.rds')
@@ -329,7 +329,7 @@ plot(p1)
 
 ```
 
-## fig 2G
+## fig 1G
 ```{r}
 
 sc.rna.mu.scale <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_mu_scale_rna_trans.rds')
@@ -370,7 +370,7 @@ plot(p2)
 ```
 
 
-## fig 2H
+## fig 1H
 ```{r}
 cc.dat <- readRDS('../Input_sub//toxo_cdc/rds_ME49_59/sc_rna_sc_atac_cross_cor_lag.rds')
 p <- ggplot(cc.dat, aes(x = ccs)) + 
@@ -394,7 +394,7 @@ sum(cc.dat$ccs > 0.6) / nrow(cc.dat)
 
 
 
-## fig 3A
+## fig 2A
 ```{r}
 L.trans.rna <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/rna_based_transition_points_v2.rds')
 
@@ -431,7 +431,7 @@ plot(p2)
 
 ```
 
-## fig 3B
+## fig 2B
 ```{r}
 rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
 rna_sub@reductions[["pca"]]@cell.embeddings[,2] <- -1 * rna_sub@reductions[["pca"]]@cell.embeddings[,2]
@@ -469,7 +469,7 @@ plot(p1)
 
 ```
 
-## fig 3C
+## fig 2C
 
 ```{r}
 L.trans.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/atac_based_transition_points_v2.rds')
@@ -507,7 +507,7 @@ plot(p1)
 ```
 
 
-## fig 3D
+## fig 2D
 ```{r}
 atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
 atac_sub@meta.data$spp2 <- "atac"
@@ -542,7 +542,7 @@ p4  <- ggplot(atac_sub_pca, aes(x= PC_1,y=-PC_2)) +
 plot(p4)
 ```
 
-## fig 3F
+## fig 2F
 ```{r}
 rna.sig.markers.rna.trans <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/rna_markers_rna_trns_sig_v2.rds')
 rna.sig.markers.rna.trans <- rna.sig.markers.rna.trans %>%
@@ -601,7 +601,7 @@ plot(p)
 ```
 
 
-## fig 4D
+## fig 3D
 
 ```{r}
 
@@ -623,7 +623,7 @@ pp <- grid.arrange(grobs = trans.plt, ncol = 2)
 
 ```
 
-## fig 4D
+## fig 3D
 ```{r}
 
 atac.sub.clust.tab <- readRDS( "../Input_sub/toxo_cdc/rds_ME49_59/atac_sub_clusters_access_profiles_list_ordered.rds")
@@ -639,9 +639,37 @@ pp <- grid.arrange(grobs = atac.sub.clust.plt, ncol = 4)
 
 
 ```
+## fig 5 B 
 
+```{r}
 
-## fig 7 A
+atac.peaks <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/atac_peaks.rds")
+peak.genes.cutRun <- readRDS("../Input_sub/toxo_cdc/cutNrun_revision/rds/Union_all_new_peaks_0.05_qval_NO_frag_filt_3Controls.rds")
+peak.genes.cutRun <- peak.genes.cutRun$peak.gene.merged.bed[1:7] 
+
+ovlp <- inner_join(peak.genes.cutRun, peak.genes.atac, by = c("gene_name" = "V7"))
+
+venn.plot <- draw.pairwise.venn(
+  area1 =length(unique(peak.genes.cutRun$gene_name)),
+  area2 = length(unique(peak.genes.atac$V7)) ,
+  cross.area = nrow(ovlp),
+  #category = c("ATAC", "C&R"),
+  fill = c("#469C2C","#F19F39"),
+  lty = rep("solid", 2),
+  lwd = 6,
+  col = c("darkgreen", "darkorange"),
+  cex = 5.5,
+  cat.cex = 3,
+  ext.length = 0.9,
+  ext.line.lwd = 2.5,
+  
+)
+grid.draw(venn.plot)
+dev.off()
+
+```
+
+## fig 6 A
 
 ```{r}
 
@@ -673,71 +701,43 @@ plot_ly(umap.KD,
 
 ```
 
-## fig 7 B
+
+
 
 ```{r}
+tab <- read.xlsx("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 
-
-```
-
-
-
-## fig 6 B 
-
-```{r}
-
-atac.peaks <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/atac_peaks.rds")
-cut.run.peaks <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/CutRunPeaks.rds")
-peak.cutRun.atac.ovrlp <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/atac_cut_run_overlap.rds")
-venn.plot <- draw.pairwise.venn(
-  area1 = nrow(cut.run.peaks),
-  area2 = nrow(atac.peaks),
-  cross.area = nrow(peak.cutRun.atac.ovrlp),
-  #category = c("ATAC", "C&R"),
-  fill = c("#469C2C","#F19F39"),
-  lty = rep("solid", 2),
-  lwd = 6,
-  col = c("darkgreen", "darkorange"),
-  cex = 5.5,
-  cat.cex = 3,
-  ext.length = 0.9,
-  ext.line.lwd = 2.5,
-
-)
-grid.draw(venn.plot)
-```
-
-## fig 7B
-
-```{r}
-tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
-
+dir.targets <- tab %>% filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based != "NA")
+dim(dir.targets)
 
 ## DEGs KD vs WT phase based 
 KD.vs.WT.phase <- tab %>% dplyr::select(TGME49, KD_vs_WT_phase_based) %>% 
   filter(KD_vs_WT_phase_based != "NA") %>% distinct()
 dim(KD.vs.WT.phase)
+DEGs <- KD.vs.WT.phase
 
 # cutRun genes in intersection of 4 data
 intrsct.peaks  <- tab %>% dplyr::select(TGME49,intersection_CutRun_dataSets) %>% 
   distinct() %>% filter(intersection_CutRun_dataSets == "yes")
 dim(intrsct.peaks)
 
-## overlap - venn
+
 DEGs <- KD.vs.WT.phase
-venn.list <- list(KD.vs.WT = unique(DEGs$TGME49), 
+venn.list <- list(KD.vs.WT = unique(DEGs$TGME49),
                   High.Conf.Peaks = intrsct.peaks$TGME49)
 
-p <- ggVennDiagram(venn.list, set_size = 6, label_size = 8) 
+p <- ggVennDiagram(venn.list, set_size = 6, label_size = 8)
 p
 ```
 
 
-## fig 7C
+
+## fig 6d
 ```{r}
 ## summary and bar plot
-tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
+# tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
 
+tab <- read.xlsx("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 HC.peaks <- tab %>% 
   filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based %in% c('down_reg', 'up_reg', 'modulated') ) %>% 
   dplyr::select(chr, start_peak, end_peak, V4, V5, V6,TGME49,intersection_CutRun_dataSets,
@@ -804,36 +804,18 @@ p
 
 ## fig 7E, F, G
 ```{r}
-tab <- read.xlsx("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.xlsx")
-tab.down <- tab %>% 
-  dplyr::select(intersection_CutRun_dataSets, TGME49,  motif, KD_vs_WT_phase_based, ProductDescription, Category) %>%
-  filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based =="down_reg") %>% 
-  distinct()
-
-# has at least one motif
-tab.motif <- tab.down %>% filter(!is.na(motif)) %>% group_by(TGME49) %>% mutate(motif.list = list(unique(motif)))
-tab.motif <- tab.motif %>% rowwise() %>%
-  mutate(which_motif = ifelse(length(unlist(motif.list)) > 1 , "both" ,"one")) %>% distinct()
-ind <- which(tab.motif$which_motif == "one")
-tab.motif$which_motif[ind] <- tab.motif$motif[ind]
-
-
-# has no motif
-tab.no.motif <- tab.down %>% filter(is.na(motif)) %>% mutate(motif.list = "none", which_motif = "none")
-
-tab.down.motif <- rbind(tab.motif, tab.no.motif)
-table(tab.down.motif$which_motif, tab.down.motif$Category)
 
 ## number of genes with both motifs / 2
 
-HC.peaks.clust <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_ribosomal_direct_targets_41.rds')
+#HC.peaks.clust <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_ribosomal_direct_targets_41.rds')
+HC.peaks.clust <-  readRDS('../Input_sub/toxo_cdc/cutNrun_revision/rds/AP2XII8_ribosomal_direct_targets_46.rds')
 HC.peaks.clust.rna <- HC.peaks.clust[HC.peaks.clust$data == "scRNA",]
 HC.peaks.clust.rna$cluster.RNA <- gsub("C 2", "C 1", gsub("C 3", "C 1", HC.peaks.clust.rna$cluster.RNA ))
 p <- plot_rna_atac_trends(HC.peaks.clust.rna) 
 plot(p)
 
 
-
+# reorder clusters based peak time of genes - match to paper
 HC.peaks.clust.atac <- HC.peaks.clust[HC.peaks.clust$data == "scATAC",]
 p <- plot_atac_trends(HC.peaks.clust.atac) 
 plot(p)
