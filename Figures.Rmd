@@ -223,6 +223,109 @@ plot(p1)
 
 ```
 
+## Revision fig
+## number of cells per cell cycle phase
+
+```{r}
+S.O.rna  <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
+S.O.rna.cell.dist <- S.O.rna@meta.data %>% group_by(phase) %>% summarise(num.Cells= n())
+S.O.rna.cell.dist$phase <- factor(S.O.rna.cell.dist$phase, c("G1.a", "G1.b", 
+                                                             "S", "M", "C"))
+
+
+p1 <- ggplot(S.O.rna.cell.dist, aes(x = phase, y = num.Cells, fill = phase, color = phase)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  scale_fill_manual(values = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05','M'='#6f883a','C' = '#b138ee')) +
+  scale_color_manual(values = c("G1.a" = "#b6232a", "G1.b" = '#ed7202', "S" = "#caae05", "M" = "#6f883a", "C" = "#b138ee")) +
+  geom_text(aes(label=num.Cells), color = "black", size = 6, vjust=1.4, fontface = "bold") +
+  theme(axis.title = element_text(size = )) +
+  theme(
+        axis.title.x = element_text(size=22, face="bold", color = "black"),
+        axis.title.y = element_text(size=22, face="bold", color = "black"),
+        axis.text.x = element_text(size = 16, face = "bold", color= "black"),
+        axis.text.y = element_text(size = 16, face = "bold", color= "black"))+
+  theme_bw()+
+  theme(
+    axis.text.x = element_blank(),
+
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank())+
+  theme(strip.background=element_rect(fill='white', color = 'black'),
+        panel.spacing = unit(1.5, "lines"), 
+        strip.text.x=element_text(angle=0, hjust=0.5,vjust=0.5, size = 14,face = 'bold'),
+        plot.title = element_text(size=16, face = "bold.italic", color = 'black'),
+        axis.title.x = element_text(size=22, face="bold"),
+        axis.title.y = element_text(size=22, face="bold"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        #panel.border = element_blank(),
+        panel.spacing = unit(0.5, "lines"),
+        strip.text = element_text(face = "bold", size = 24,  angle = 0), 
+        strip.placement = "outside") +
+  theme(legend.text = element_text(face = "bold", size = 16),
+        legend.title = element_text(face = "bold", size = 18))+
+  theme(panel.spacing = unit(1.5, "lines")) +
+  ggtitle("scRNA-Seq")
+
+p1
+
+# ggsave("../OutPut/toxo_cdc/ME49_59/figures_paper/Cells_distribution_per_phase_scRNA.pdf", 
+#        height = 4, width = 6, dpi = 300, plot = p1)
+# 
+
+```
+
+
+## cells distribution - atac 
+```{r}
+S.O.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+S.O.atac.cell.dist <- S.O.atac@meta.data %>% group_by(phase) %>% summarise(num.Cells = n())
+S.O.atac.cell.dist$phase <- factor(S.O.atac.cell.dist$phase, c("G1.a", "G1.b", 
+                                                             "S", "M", "C"))
+
+p2 <- ggplot(S.O.atac.cell.dist, aes(x = phase, y = num.Cells, fill = phase, color = phase)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  scale_fill_manual(values = c("G1.a" = "#b6232a","G1.b" ='#ed7202', 'S' = '#caae05','M'='#6f883a','C' = '#b138ee')) +
+  scale_color_manual(values = c("G1.a" = "#b6232a", "G1.b" = '#ed7202', "S" = "#caae05", "M" = "#6f883a", "C" = "#b138ee")) +
+  geom_text(aes(label=num.Cells), color = "black", size = 6, vjust=1.4, fontface = "bold") +
+  theme(axis.title = element_text(size = )) +
+  theme(
+        axis.title.x = element_text(size=22, face="bold", color = "black"),
+        axis.title.y = element_text(size=22, face="bold", color = "black"),
+        axis.text.x = element_text(size = 16, face = "bold", color= "black"),
+        axis.text.y = element_text(size = 16, face = "bold", color= "black"))+
+  theme_bw()+
+  theme(
+    axis.text.x = element_blank(),
+
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank())+
+  theme(strip.background=element_rect(fill='white', color = 'black'),
+        panel.spacing = unit(1.5, "lines"), 
+        strip.text.x=element_text(angle=0, hjust=0.5,vjust=0.5, size = 14,face = 'bold'),
+        plot.title = element_text(size=16, face = "bold.italic", color = 'black'),
+        axis.title.x = element_text(size=22, face="bold"),
+        axis.title.y = element_text(size=22, face="bold"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        #panel.border = element_blank(),
+        panel.spacing = unit(0.5, "lines"),
+        strip.text = element_text(face = "bold", size = 24,  angle = 0), 
+        strip.placement = "outside") +
+  theme(legend.text = element_text(face = "bold", size = 16),
+        legend.title = element_text(face = "bold", size = 18))+
+  theme(panel.spacing = unit(1.5, "lines")) +
+  ggtitle("scATAC-Seq")
+
+p2
+
+# ggsave("../OutPut/toxo_cdc/ME49_59/figures_paper/Cells_distribution_per_phase_scATAC.pdf", 
+#        height = 4, width = 6, dpi = 300, plot = p2)
+```
+
+
 ## excluded from the paper
 
 ```{r}
