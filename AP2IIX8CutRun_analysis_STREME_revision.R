@@ -213,7 +213,7 @@ all.peak.genes.tab <- do.call("rbind", all.peak.genes[1:3])
 saveRDS(all.peak.genes.tab, "../Input_sub/toxo_cdc/cutNrun_revision/rds/CutRunPeaks_3Controls_genes_assigned_revision.rds")
 
 
-#############################
+
 ## Ven diagram - overalp of peaks across 3 cut and run data 
 
 all.peak.genes.tab <- readRDS("../Input_sub/toxo_cdc/cutNrun_revision/rds/CutRunPeaks_3Controls_genes_assigned_revision.rds")
@@ -376,14 +376,6 @@ all.peak.genes <- left_join(all.peak.genes.tab.wide, peak.genes , by = "gene_nam
 
 
 
-# ## motif info output from BAMM motif finder 
-# 
-#in.dir <- '../Input_sub/toxo_cdc/cutNrun/all_macs2_old_new_batch_NO_Filter/BAMM_analysis_v2/allPeaksUnion/peak_genes_union_all_BaMMmotif/' ## 970 (union)
-#in.dir <- '../Input_sub/toxo_cdc/cutNrun_revision/all_macs2_old_new_batch_NO_Filter/BAMM_analysis_v2/allPeaksUnion/peak_genes_union_all_BaMMmotif/' ## 965 (union)
-# occ.files <- list.files(in.dir)[grep('occurrence', list.files(in.dir))] # only motif 1 and motif 2
-# in.file <- paste0(in.dir, occ.files)[-c(3,4)]
-
-
 ## motif info output from STREME motif finder 
 all.motifs.tab <- readRDS("../Input_sub/Revision/all_motifs_streme_revision.rds")
 peak.genes.motif <- all.motifs.tab[[which(grepl("peak_genes_union", names(all.motifs.tab)))]]
@@ -440,71 +432,12 @@ colnames(cut.run.tab) <- c("TGME49", "AP2XII-8_Ty_S4_vs_AP2XII-8_IgG1_peaks" , "
                            "V4", "V5", "V6","Genomic_location", "assigned_to_CutRun_peaks" , "id" , "pattern" ,"motif_pvalue","data","motif_id",
                            "KD_vs_WT_phase_based" ,"ProductDescription", "new.name" , "Category" )
 
-# colnames(cut.run.tab) <- c("TGME49", "AP2XII-8_Ty_S4_vs_AP2XII-8_IgG1_peaks" ,
-#                            "AP2XII-8_Ty_S4_vs_RH_IgG1_S1_peaks" ,"AP2XII-8_Ty_S4_vs_RH_Ty_S2_peaks",
-#                            "intensity.mean" ,   "intersection_CutRun_dataSets", "Ribosomal_description",
-#                            "Category", "chr", "start_peak" , "end_peak",
-#                            "V4", "V5", "V6","Genomic_location", "assigned_to_CutRun_peaks" , 
-#                            "KD_vs_WT_phase_based" ,"ProductDescription", "new.name"  )
 
 write.xlsx(cut.run.tab, "../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 write.xlsx(cut.run.tab, "../OutPut/toxo_cdc/ME49_59/tables/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 saveRDS(cut.run.tab, "../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_v11_Streme_motif_revision.rds")
 
 
-#cut.run.tab <- cut.run.tab %>% mutate(Category = ifelse(str_detect(ProductDescription, "ribosomal"), "ribosomal", "others"))
-# 
-# write.xlsx(cut.run.tab, "../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v9_revision.xlsx")
-# write.xlsx(cut.run.tab, "../OutPut/toxo_cdc/ME49_59/tables/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v9_revision.xlsx")
-# saveRDS(cut.run.tab, "../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v9_revision.rds")
-# 
-# write.xlsx(cut.run.tab, "../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.xlsx")
-# write.xlsx(cut.run.tab, "../OutPut/toxo_cdc/ME49_59/tables/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.xlsx")
-# saveRDS(cut.run.tab, "../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
-
-
-
-
-############## Update this part when KZ does the motif search ##################
-
-## modify supplementary table 
-#cut.run.tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v9_revision.rds")
-cut.run.tab <- readRDS("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_v11_Streme_motif_revision.rds")
-
-cut.run.tab.supplmnt <- cut.run.tab %>% 
-  dplyr::select(id, chr, start_peak, end_peak, V4, V5, V6,TGME49, assigned_to_CutRun_peaks,
-                intersection_CutRun_dataSets, MOTIF, KD_vs_WT_phase_based, ProductDescription, new.name, Category)
-write.xlsx(cut.run.tab.supplmnt, "../OutPut/toxo_cdc/ME49_59/tables/Supplements_revision/cut_run_peak_gene_assignement_supplement_revision.xlsx")
-#write.xlsx(cut.run.tab.supplmnt, "../OutPut/toxo_cdc/ME49_59/tables/Supplement/cut_run_peak_gene_assignement_supplement.xlsx")
-
-## motif table summary Fig6 e
-
-tab <- read.xlsx("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
-
-tab.down <- tab %>% 
-  dplyr::select(intersection_CutRun_dataSets, TGME49,  motif_id, KD_vs_WT_phase_based, ProductDescription) %>%
-  filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based =="down_reg") %>% 
-  distinct()
-
-# has at least one motif
-tab.motif <- tab.down %>% filter(!is.na(motif)) %>% group_by(TGME49) %>% mutate(motif.list = list(unique(motif)))
-tab.motif <- tab.motif %>% rowwise() %>%
-  mutate(which_motif = ifelse(length(unlist(motif.list)) > 1 , "both" ,"one")) %>% distinct()
-ind <- which(tab.motif$which_motif == "one")
-tab.motif$which_motif[ind] <- tab.motif$motif[ind]
-
-
-# has no motif
-tab.no.motif <- tab.down %>% filter(is.na(motif)) %>% mutate(motif.list = "none", which_motif = "none")
-
-tab.down.motif <- rbind(tab.motif, tab.no.motif)
-table(tab.down.motif$which_motif, tab.down.motif$Category)
-
-## number of genes with both motifs / 2
-
-
-
-#####################
 
 ## atac cut&run peaks overlap
 Tg_ATAC <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_ATAC_peak.rds')
@@ -604,13 +537,13 @@ dev.off()
 
 
 
-### 
+
 ## motif search 
 ###############################################################
 ## write fasta file (cut and run regions) for high conf peaks 
 ## write the genes in excel file for GO term analysis on toxodb
 ###############################################################
-#tab <- readRDS("../Input/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v4.rds")
+
 tab <- read.xlsx("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 
 # phase based 
@@ -646,9 +579,4 @@ cluster.bed.list <- lapply(1:length(HC.peaks.list), function(i){
   return(cluster.bed)
 })
 
-
-##########
-
-
-cut.run.tab <- read.xlsx("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 
