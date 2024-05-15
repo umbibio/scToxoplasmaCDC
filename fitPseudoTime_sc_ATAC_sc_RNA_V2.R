@@ -19,7 +19,7 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 # Fit a pseudo-time curve and align using sync data
 
-S.O.integrated <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_integrated.rds')
+S.O.integrated <- readRDS('../Input_sub/rds_ME49_59/S.O.intra_atac_integrated.rds')
 S.O.integrated@meta.data$Sample <- rownames(S.O.integrated@meta.data)
 Idents(S.O.integrated) <- 'orig.ident'
 
