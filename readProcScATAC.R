@@ -28,11 +28,11 @@ library(Seurat)
 source('./util_funcs.R')
 
 # Read scRAN-Seq data and convert TGGT1 Ids to TGME49
-S.O <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_lables.rds')
+S.O <- readRDS('../Input_sub/rds_ME49_59/S.O.intra_lables.rds')
 
 # IDs
-prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/rds_ME49_59/Toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/rds_ME49_59/Toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 # Map to ME49 
 counts = S.O@assays$RNA@counts
@@ -51,13 +51,13 @@ DimPlot(S.O.ME49, reduction = 'pca')
 
 ## prepare genome
 
-ME49.fasta <- readDNAStringSet("../Input_sub/toxo_genomics/genome/ToxoDB-59_TgondiiME49_Genome.fasta")
+ME49.fasta <- readDNAStringSet("../Input_sub/rds_ME49_59/toxo_genomics/genome/ToxoDB-59_TgondiiME49_Genome.fasta")
 chrs <- names(ME49.fasta)[grep("TGME49_chr", names(ME49.fasta))]
 
 chr.len <- data.frame(chr = gsub(" ", "", unlist(lapply(strsplit(chrs, split = '\\|'), `[[`, 1))),
                       len = as.numeric(gsub('length=', '', unlist(lapply(strsplit(chrs, split = '\\|'), `[[`, 4)))))
 
-txdb <- makeTxDbFromGFF(file="../Input_sub/toxo_genomics/genome/ToxoDB-59_TgondiiME49_filter.gtf",
+txdb <- makeTxDbFromGFF(file="../Input_sub/rds_ME49_59/toxo_genomics/genome/ToxoDB-59_TgondiiME49_filter.gtf",
                         dataSource="Toxodb",
                         organism="Toxoplasma")
 
@@ -94,9 +94,9 @@ seqinfo(tx_trans)
 
 
 ## read scATAC data from cellranger 
-counts <- Read10X_h5(filename = "../Input_sub/toxo_scATAC_MJ_ME49_59/filtered_peak_bc_matrix.h5")
+counts <- Read10X_h5(filename = "../Input_sub/rds_ME49_59/toxo_scATAC_MJ_ME49_59/filtered_peak_bc_matrix.h5")
 metadata <- read.csv(
-  file = "../Input_sub/toxo_scATAC_MJ_ME49_59/singlecell.csv",
+  file = "../Input_sub/rds_ME49_59/toxo_scATAC_MJ_ME49_59/singlecell.csv",
   header = TRUE,
   row.names = 1
 )
@@ -104,13 +104,13 @@ metadata <- read.csv(
 metadata.filt <- metadata
 metadata.filt$Sample <- rownames(metadata.filt)
 metadata.filt <- metadata.filt[metadata.filt$Sample %in% colnames(counts), ]
-peak_anno <- read_tsv("../Input_sub/toxo_scATAC_MJ_ME49_59/filtered_peak_bc_matrix/peaks.bed", col_names = c('Chr', 'strt', 'stp'))
+peak_anno <- read_tsv("../Input_sub/rds_ME49_59/toxo_scATAC_MJ_ME49_59/filtered_peak_bc_matrix/peaks.bed", col_names = c('Chr', 'strt', 'stp'))
 
 chrom_assay <- CreateChromatinAssay(
   counts = counts,
   sep = c(":", "-"),
   genome = seqinfo(tx_trans),
-  fragments = '../Input_sub/toxo_scATAC_MJ_ME49_59/fragments.tsv.gz',
+  fragments = '../Input_sub/rds_ME49_59/toxo_scATAC_MJ_ME49_59/fragments.tsv.gz',
   min.cells = 5,
   min.features = 100
 )
@@ -280,4 +280,4 @@ Tg_ATAC <- RunTSNE(object = Tg_ATAC,features = VariableFeatures(object = Tg_ATAC
 DimPlot(object = Tg_ATAC, reduction = "tsne", label = TRUE) + NoLegend()
 
 
-saveRDS(Tg_ATAC, '../Input_sub/toxo_cdc/rds_ME49_59/S.O_ATAC_peak.rds')
+saveRDS(Tg_ATAC, '../Input_sub/rds_ME49_59/S.O_ATAC_peak.rds')
