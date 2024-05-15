@@ -6,11 +6,11 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 
 # Count files
-intra.file.csv <- "../Input_sub/toxo_scRNA_MJ_ME49_59/RH.intra.expr.csv"
+intra.file.csv <- "../Input_sub/rds_ME49_59/RH.intra.expr.csv"
 
 ## IDs
-prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/rds_ME49_59/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/rds_ME49_59/TGGT1_ME49 Orthologs.xlsx')
 
 
 getExpr <- function(in.file, TGGT1_ME49){
@@ -54,7 +54,7 @@ DimPlot(S.O)
 
 S.O.list <- list(intra = S.O.intra)
 
-S.O.tg.boothroyd <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.tg_RH_boothroyd.rds')
+S.O.tg.boothroyd <- readRDS('../Input_sub/rds_ME49_59/S.O.tg_RH_boothroyd.rds')
 
 S.Os <- mclapply(S.O.list, function(S.O){
   S.O <- prep_S.O(S.O, res = 0.4)
