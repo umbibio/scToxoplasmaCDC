@@ -56,24 +56,24 @@ getCurvePeakLoc <- function(t, y, prob = 0.8){
 
 # Read in the data
 
-prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 prod.desc <- left_join(prod.desc, TGGT1_ME49, by = c('GeneID' = 'TGGT1'))
 
-marker.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
+marker.genes <- readRDS('../Input_sub/rds_ME49_59/Intra_markers_sig.rds')
 marker.genes.phase <- marker.genes %>% transmute(GeneID = gene, phase = cluster) %>% distinct()
 
 
-sc.rna.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
-sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
+sc.rna.spline.fits <- readRDS('../Input_sub/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
+sc.atac.spline.fits <- readRDS('../Input_sub/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
 # Filter to include markers only
 sc.rna.spline.fits <- sc.rna.spline.fits %>% dplyr::filter(GeneID %in% marker.genes$gene)
 sc.atac.spline.fits <- sc.atac.spline.fits %>% dplyr::filter(GeneID %in% marker.genes$gene)
 
 
-rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
-atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+rna_sub <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_lables_pt.rds')
+atac_sub <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 
 
 # Turn the data into wide format (time by gene) and center & scale each gene
