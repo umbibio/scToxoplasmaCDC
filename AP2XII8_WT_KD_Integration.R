@@ -29,11 +29,11 @@ source('./util_funcs.R')
 
 ## WT 
 
-S.O.ref <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.WT_labels.rds")
+S.O.ref <- readRDS("../Input_sub/rds_ME49_59/S.O.rna.WT_labels.rds")
 
 ##  A2XII8 KD 
 
-S.O.rna.KD <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
+S.O.rna.KD <- readRDS('../Input_sub/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
 
 
 ## Integration of WT and KD scRNA-seq data sets
@@ -71,13 +71,13 @@ S.O.integrated$inferred.phase <- factor(S.O.integrated$phase, levels = c("G1a", 
 
 ## Add automatic Seurat clusters 
 
-S.O.rna.WT <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.WT_labels.rds')
+S.O.rna.WT <- readRDS('../Input_sub/rds_ME49_59/S.O.rna.WT_labels.rds')
 rna.wt.met <- data.frame(cells = rownames(S.O.rna.WT@meta.data),
                          seurat_clausters_indiv = S.O.rna.WT@meta.data$seurat_clusters)
 rownames(rna.wt.met) <- paste(rownames(S.O.rna.WT@meta.data), "_1", sep = "")
 
 
-S.O.rna.KD <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
+S.O.rna.KD <- readRDS('../Input_sub/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
 rna.KD.met <- data.frame(cells = rownames(S.O.rna.KD@meta.data),
                          seurat_clausters_indiv = S.O.rna.KD@meta.data$seurat_clusters)
 rownames(rna.KD.met) <- paste(rownames(S.O.rna.KD@meta.data), "_2", sep = "")
