@@ -28,10 +28,10 @@ library(plotly)
 
 source('./util_funcs.R')
 
-S.O.integrated <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/S.O.integrated_rna_WT_AP2XII8KD_reference_rna_WT_transferred_lables_from_boot.rds")
+S.O.integrated.rna <- readRDS("../Input_sub/rds_ME49_59/S.O.integrated_rna_WT_AP2XII8KD_reference_rna_WT_transferred_lables_from_boot.rds")
 
-prod.desc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_ME49.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 
 # Marker analysis - KD vs WT (Global)
@@ -51,7 +51,7 @@ DEGs.KD.vs.WT.sig$GeneID <- gsub("-", "_", DEGs.KD.vs.WT.sig$gene)
 DEGs.KD.vs.WT.sig$dir[DEGs.KD.vs.WT.sig$cluster == "scRNA"] <- "activated"
 DEGs.KD.vs.WT.sig$dir[DEGs.KD.vs.WT.sig$cluster == "scRNA_KD"] <- "repressed" 
 
-DEGs.KD.vs.WT.sig.desc <- left_join(DEGs.KD.vs.WT.sig, prod.desc, by = c("GeneID" = "TGME49"))
+DEGs.KD.vs.WT.sig.desc <- left_join(DEGs.KD.vs.WT.sig, prod.desc, by = c("GeneID" = "GeneID"))
 saveRDS(DEGs.KD.vs.WT.sig.desc, "../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_KD_vs_WT_global_markers_sig_fc_1_5.rds")
 
 
@@ -112,7 +112,7 @@ KD.vs.WT.phase.marker.sig$dir[KD.vs.WT.phase.marker.sig$ref.spp == "scRNA_KD"] <
 
 
 KD.vs.WT.phase.marker.sig.desc <- left_join(KD.vs.WT.phase.marker.sig, prod.desc,
-                                            by = c("GeneID" = "TGME49"))
+                                            by = c("GeneID" = "GeneID"))
 
 
 # Assig up-regulated, down-regulated, modulated
