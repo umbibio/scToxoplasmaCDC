@@ -5,9 +5,9 @@ source('./loadlb.R')
 num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 
-prod.desc <- read.xlsx("../Input_sub/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
-atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
-rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
+prod.desc <- read.xlsx("../Input_sub/rds_ME49_59/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
+atac_sub <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+rna_sub <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_lables_pt.rds')
 
 # Differential gene expression (inferred cell cycle phase)
 
@@ -26,9 +26,9 @@ ss <- Intra.markers.sig %>% group_by(cluster) %>% summarise(num.DEG = n())
 
 # Differential gene expression (inferred transition point)
 
-prod.desc <- read.xlsx("../Input_sub/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
-rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
-atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
+prod.desc <- read.xlsx("../Input_sub/rds_ME49_59/Toxo_genomics/genes/MJ_annotation_07_27_2023.xlsx")
+rna_sub <- readRDS('../Input_sub/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
+atac_sub <- readRDS('../Input_sub/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
 
 
 Idents(rna_sub) <- 'transition.rna'
