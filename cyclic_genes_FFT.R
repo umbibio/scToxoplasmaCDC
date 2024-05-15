@@ -60,8 +60,8 @@ getCurvePeakLoc <- function(t, y, prob = 0.8){
   return(entity.x)
 }
 
-prod.disc  <- read.xlsx('../Input_sub/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-GT1.ME49 <- read.xlsx('../Input_sub/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.disc  <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+GT1.ME49 <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 prod.disc <- left_join(prod.disc, GT1.ME49, by = c("GeneID" = "TGGT1")) %>% na.omit()
 prod.disc$TGME49 <- gsub('_', '-', prod.disc$TGME49)
 
@@ -69,11 +69,11 @@ prod.disc$TGME49 <- gsub('_', '-', prod.disc$TGME49)
 # sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
 # sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
-sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes_1.1.rds')
-sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes_1.1.rds')
+sc.rna.genes.expr.pt <- readRDS('../Input_sub/rds_ME49_59/sc_rna_spline_fits_all_genes_1.1.rds')
+sc.atac.genes.expr.pt <- readRDS('../Input_sub/rds_ME49_59/sc_atac_spline_fits_all_genes_1.1.rds')
 
 ## Phase-based DEGs
-Intra.markers.sig <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
+Intra.markers.sig <- readRDS('../Input_sub/rds_ME49_59/Intra_markers_sig.rds')
 
 
 
