@@ -23,12 +23,12 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 # Splines
 
-sc.rna.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
-sc.atac.spline.fits <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
+sc.rna.spline.fits <- readRDS('../Input_sub/rds_ME49_59/sc_rna_spline_fits_all_genes.rds')
+sc.atac.spline.fits <- readRDS('../Input_sub/rds_ME49_59/sc_atac_spline_fits_all_genes.rds')
 
 # Markers
 
-marker.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/Intra_markers_sig.rds')
+marker.genes <- readRDS('../Input_sub/rds_ME49_59/Intra_markers_sig.rds')
 marker.genes.phase <- marker.genes %>% transmute(GeneID = gene, phase = cluster) %>% distinct()
 
 
