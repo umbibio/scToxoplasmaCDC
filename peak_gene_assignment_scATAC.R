@@ -5,7 +5,7 @@ source('./loadlb.R')
 
 # ATAC peak Regions in bed format 
 
-Tg_ATAC <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_ATAC_peak.rds')
+Tg_ATAC <- readRDS('../Input_sub/rds_ME49_59/S.O_ATAC_peak.rds')
 
 peak.regions <- data.frame(ATAC_peak_region = rownames(Tg_ATAC@assays$peaks@data))
 peak.regions <- peak.regions %>% filter(!grepl("KE.*", ATAC_peak_region))
@@ -19,7 +19,7 @@ peaks.all.sort$V4 <- paste(paste(peaks.all.sort$V1, peaks.all.sort$V2, sep = ":"
 
 # annotation file 
 
-gtf.file <- "../Input_sub/Genomes/ToxoDB-59_TgondiiME49.gtf"
+gtf.file <- "../Input_sub/rds_ME49_59/Genomes/ToxoDB-59_TgondiiME49.gtf"
 gtf <- read.table(gtf.file, header = F, sep = '\t', quote = NULL)
 gtf.filt <- gtf %>% dplyr::filter(!grepl('KE.*', V1))
 
@@ -111,7 +111,7 @@ peaks.genes.dist.trns.filt <- peaks.genes.dist.trns %>% dplyr::filter(abs(V16) <
 # prep bed format 
 # merge multiple peaks assigned to a single gene
 
-peak.genes <- read.xlsx("../Input_sub/toxo_scATAC_MJ_ME49_59/scATAC_peaks_genes_assigned.xlsx")
+peak.genes <- read.xlsx("../Input_sub/rds_ME49_59/toxo_scATAC_MJ_ME49_59/scATAC_peaks_genes_assigned.xlsx")
 peak.genes <- peak.genes %>% dplyr::select(V1.x, V2.x, V3.x, V11, gene_name) 
 peak.genes.bed.merged <- peak.genes %>% arrange(V2.x) %>% 
   group_by(gene_name) %>% mutate(start_peak = V2.x[which.min(V2.x)], end_peak = V3.x[which.max(V3.x)])  %>% 
