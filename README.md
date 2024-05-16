@@ -19,6 +19,9 @@ git clone https://github.com/umbibio/scToxoplasmaCDC.git
 ## Requirements
 The code runs on a standard desktop/laptop computer with enough RMA (>16Gb). The code is tested on Mac and uses standard R packages. 
 
+```
+This code
+```
 ## Run time
 Run time for most parts of the code is very short. Fitting Splines will take up to 1 hour. Multiple cores can be specified for faster run.
 
