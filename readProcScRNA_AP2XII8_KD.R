@@ -22,8 +22,8 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 intra.file.csv <- "../Input_sub/rds_ME49_59/toxo_scRNA_AP2XII8_KD_230327/AP2XII8_KD.expr.csv"
 
 ## IDs
-prod.desc  <- read.xlsx('../input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+prod.desc  <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 
 # Expression matrix with TGGT1 IDs 
@@ -70,7 +70,7 @@ S.O.list <- mclapply(S.O.list, function(S.O){
 
 ## Transfer labels from Bootroyed
 
-S.O.tg.boothroyd <- readRDS('../input_sub/rds_ME49_59/S.O.tg_RH_boothroyd.rds')
+S.O.tg.boothroyd <- readRDS('../Input_sub/rds_ME49_59/S.O.tg_RH_boothroyd.rds')
 
 ## Split the data, process each, and transfer the labels 
 
@@ -93,9 +93,9 @@ S.Os <- lapply(1:length(S.Os), function(i){
 
 
 # convert TGGT1 IDs to ME49
-S.O <- readRDS('../input_sub/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed_TGGT1.rds')
-prod.desc  <- read.xlsx('../input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+S.O <- readRDS('../Input_sub/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed_TGGT1.rds')
+prod.desc  <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 counts = S.O@assays$RNA@counts
 rownames(counts) <- gsub('_', '-', TGGT1_ME49$TGME49[match(gsub('-', '_', rownames(counts)), TGGT1_ME49$TGGT1)])
@@ -125,9 +125,9 @@ sum(varExplained)
 ## Convert TGGT1 IDs to ME49 (WT)
 ## rna-WT with already transferred lables from Bootroyed is used as reference 
 
-S.O <- readRDS('../input_sub/rds_ME49_59/S.O.intra_lables.rds')
-prod.desc  <- read.xlsx('../input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
-TGGT1_ME49 <- read.xlsx('../input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
+S.O <- readRDS('../Input_sub/rds_ME49_59/S.O.intra_lables.rds')
+prod.desc  <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/genes/ProductDescription_GT1.xlsx')
+TGGT1_ME49 <- read.xlsx('../Input_sub/rds_ME49_59/toxo_genomics/Orthologs/TGGT1_ME49 Orthologs.xlsx')
 
 counts = S.O@assays$RNA@counts
 rownames(counts) <- gsub('_', '-', TGGT1_ME49$TGME49[match(gsub('-', '_', rownames(counts)), TGGT1_ME49$TGGT1)])
