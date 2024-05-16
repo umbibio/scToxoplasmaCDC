@@ -9,8 +9,8 @@ num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 # Read in the data
 
-sc.rna.genes.expr.pt <- readRDS('../input_sub/rds_ME49_59/sc_rna_genes_expr_pt.rds')
-sc.atac.genes.expr.pt <- readRDS('../input_sub/rds_ME49_59/sc_atac_genes_expr_pt.rds')
+sc.rna.genes.expr.pt <- readRDS('../Input_sub/rds_ME49_59/sc_rna_genes_expr_pt.rds')
+sc.atac.genes.expr.pt <- readRDS('../Input_sub/rds_ME49_59/sc_atac_genes_expr_pt.rds')
 
 
 # Common genes between the data sets
