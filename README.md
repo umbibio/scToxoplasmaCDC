@@ -7,7 +7,6 @@
 * Pseudo-time analysis
 * Fitting gene curves(smoothing splines)
 * Marker analysis
-* Time-course clustering
 * CUT&RN data processing
 * Reproducing Figures in the manuscript: https://www.biorxiv.org/content/10.1101/2023.10.06.561197v1
 
