@@ -21,7 +21,7 @@ source("./loadlb.R")
 ```{r}
 ##
 
-S.O.rna  <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds') 
+S.O.rna  <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_lables_pt.rds') 
 S.O.rna@meta.data$spp2 <- S.O.rna@meta.data$spp
 intra.pca <- getPcaMetaData(S.O.rna)
 
@@ -55,9 +55,9 @@ plot(p1)
 ## Fig1 B, umap - rna
 ```{r}
 
-sc.rna.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_genes_expr_pt.rds')
-S.O.rna  <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
-rna.sds.data <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_sds_data.rds')
+sc.rna.genes.expr.pt <- readRDS('../Input_sub/rds_ME49_59/sc_rna_genes_expr_pt.rds')
+S.O.rna  <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_lables_pt.rds')
+rna.sds.data <- readRDS('../Input_sub/rds_ME49_59/sc_rna_sds_data.rds')
 
 
 L <- wiskerPlot(S.O.rna)
@@ -84,7 +84,7 @@ points(rna.sds.data$sc1[rna.sds.data$cell.ord],-rna.sds.data$sc2[rna.sds.data$ce
 
 ## Fig1 B, ggplot version - pca -rna
 ```{r}
-S.O.rna  <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
+S.O.rna  <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_lables_pt.rds')
 S.O.rna@meta.data$spp2 <- S.O.rna@meta.data$spp
 intra.pca <- getPcaMetaData(S.O.rna)
 
@@ -121,7 +121,7 @@ plot(p1)
 
 ## fig 1C, - umap atac
 ```{r}
-S.O.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+S.O.atac <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 S.O.atac@meta.data$spp2 <- "atac"
 atac.pca <- getPcaMetaData(S.O.atac)
 
@@ -158,9 +158,9 @@ plot(p1)
 ## fig 1D, pca - atac
 ```{r}
 
-sc.atac.genes.expr.pt <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_genes_expr_pt.rds')
-S.O.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
-atac.sds.data <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_sds_data.rds')
+sc.atac.genes.expr.pt <- readRDS('../Input_sub/rds_ME49_59/sc_atac_genes_expr_pt.rds')
+S.O.atac <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+atac.sds.data <- readRDS('../Input_sub/rds_ME49_59/sc_atac_sds_data.rds')
 
 L <- wiskerPlot(S.O.atac)
 L$pc$PC_2 <- L$pc$PC_2 * -1
@@ -188,7 +188,7 @@ points(atac.sds.data$sc1[atac.sds.data$cell.ord],-atac.sds.data$sc2[atac.sds.dat
 ## Fig 1D - ggplot version 
 
 ```{r}
-S.O.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+S.O.atac <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 S.O.atac@meta.data$spp2 <- "atac"
 atac.pca <- getPcaMetaData(S.O.atac)
 
@@ -227,7 +227,7 @@ plot(p1)
 ## number of cells per cell cycle phase
 
 ```{r}
-S.O.rna  <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_lables_pt.rds')
+S.O.rna  <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_lables_pt.rds')
 S.O.rna.cell.dist <- S.O.rna@meta.data %>% group_by(phase) %>% summarise(num.Cells= n())
 S.O.rna.cell.dist$phase <- factor(S.O.rna.cell.dist$phase, c("G1.a", "G1.b", 
                                                              "S", "M", "C"))
@@ -279,7 +279,7 @@ p1
 
 ## cells distribution - atac 
 ```{r}
-S.O.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
+S.O.atac <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 S.O.atac.cell.dist <- S.O.atac@meta.data %>% group_by(phase) %>% summarise(num.Cells = n())
 S.O.atac.cell.dist$phase <- factor(S.O.atac.cell.dist$phase, c("G1.a", "G1.b", 
                                                              "S", "M", "C"))
@@ -330,7 +330,7 @@ p2
 
 ```{r}
 ## box plot - distribution of cells within each phase
-rna.sds.data <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_sds_data.rds')
+rna.sds.data <- readRDS('../Input_sub/rds_ME49_59/sc_rna_sds_data.rds')
 rna.sds.data$phase <- gsub("\\.", "", rna.sds.data$phase)
 rna.sds.data$phase <- factor(rna.sds.data$phase, levels = c("G1a", "G1b", "S", "M", "C"))
 
@@ -357,7 +357,7 @@ p
 ## fig 1F
 
 ```{r}
-rna.sds.data <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_sds_data.rds')
+rna.sds.data <- readRDS('../Input_sub/rds_ME49_59/sc_rna_sds_data.rds')
 rna.s.t <- picewise_scale_V2(rna.sds.data)
 rna.s.t$phase <- factor(rna.s.t$phase, levels = c('G1.a', 'G1.b', 'S', 'M', 'C'))
 
@@ -435,8 +435,8 @@ plot(p1)
 ## fig 1G
 ```{r}
 
-sc.rna.mu.scale <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_rna_spline_mu_scale_rna_trans.rds')
-sc.atac.mu.scale <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/sc_atac_spline_mu_scale_atac_trans.rds')
+sc.rna.mu.scale <- readRDS('../Input_sub/rds_ME49_59/sc_rna_spline_mu_scale_rna_trans.rds')
+sc.atac.mu.scale <- readRDS('../Input_sub/rds_ME49_59/sc_atac_spline_mu_scale_atac_trans.rds')
 
 ## new version
 sc.rna.mu.scale$data <- "scRNA"
@@ -475,7 +475,7 @@ plot(p2)
 
 ## fig 1H
 ```{r}
-cc.dat <- readRDS('../Input_sub//toxo_cdc/rds_ME49_59/sc_rna_sc_atac_cross_cor_lag.rds')
+cc.dat <- readRDS('../Input_sub/rds_ME49_59/sc_rna_sc_atac_cross_cor_lag.rds')
 p <- ggplot(cc.dat, aes(x = ccs)) + 
   geom_histogram(aes(y = ..density..),
                  colour = 1, fill = "cyan", alpha = 0.2) +
@@ -499,7 +499,7 @@ sum(cc.dat$ccs > 0.6) / nrow(cc.dat)
 
 ## fig 2A
 ```{r}
-L.trans.rna <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/rna_based_transition_points_v2.rds')
+L.trans.rna <- readRDS('../Input_sub/rds_ME49_59/rna_based_transition_points_v2.rds')
 
 rna_peaks.dat <- L.trans.rna$spline.fit.peaks.smooth %>% 
   transmute(g = x, y = s0, yp = s1) %>% pivot_longer(-g, names_to = 'drivs', values_to = 'value')
@@ -536,7 +536,7 @@ plot(p2)
 
 ## fig 2B
 ```{r}
-rna_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
+rna_sub <- readRDS('../Input_sub/rds_ME49_59/S.O.intra_rna_atac_trnasition_v2.rds')
 rna_sub@reductions[["pca"]]@cell.embeddings[,2] <- -1 * rna_sub@reductions[["pca"]]@cell.embeddings[,2]
 rna_sub@meta.data$spp2 <- "rna"
 rna_sub_pca <- getPcaMetaData.trans(rna_sub)
@@ -575,7 +575,7 @@ plot(p1)
 ## fig 2C
 
 ```{r}
-L.trans.atac <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/atac_based_transition_points_v2.rds')
+L.trans.atac <- readRDS('../Input_sub/rds_ME49_59/atac_based_transition_points_v2.rds')
 atac_peaks.dat <- L.trans.atac$spline.fit.peaks.smooth %>% 
   transmute(g = x, y = s0, yp = s1) %>% pivot_longer(-g, names_to = 'drivs', values_to = 'value')
 atac_peaks.dat$value[atac_peaks.dat$value < 0] <- 0
@@ -612,7 +612,7 @@ plot(p1)
 
 ## fig 2D
 ```{r}
-atac_sub <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
+atac_sub <- readRDS('../Input_sub/rds_ME49_59/S.O.intra_atac_atac_trnasition_v2.rds')
 atac_sub@meta.data$spp2 <- "atac"
 atac_sub_pca <- getPcaMetaData.atac.trans(atac_sub)
 
@@ -647,7 +647,7 @@ plot(p4)
 
 ## fig 2F
 ```{r}
-rna.sig.markers.rna.trans <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/rna_markers_rna_trns_sig_v2.rds')
+rna.sig.markers.rna.trans <- readRDS('../Input_sub/rds_ME49_59/rna_markers_rna_trns_sig_v2.rds')
 rna.sig.markers.rna.trans <- rna.sig.markers.rna.trans %>%
   mutate(Category = ifelse(str_detect(new.prod.desc, "hypothetical protein"), "hypo.", "others"))
 
@@ -708,7 +708,7 @@ plot(p)
 
 ```{r}
 
-rna.trans.data.list <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/rna_markers_rna_transitions_dtw_clust_list_ordered.rds")
+rna.trans.data.list <- readRDS("../Input_sub/rds_ME49_59/rna_markers_rna_transitions_dtw_clust_list_ordered.rds")
 
 trans.plt <- c()
 trans.plt <- lapply(1:length(rna.trans.data.list), function(i) {
@@ -729,7 +729,7 @@ pp <- grid.arrange(grobs = trans.plt, ncol = 2)
 ## fig 3D
 ```{r}
 
-atac.sub.clust.tab <- readRDS( "../Input_sub/toxo_cdc/rds_ME49_59/atac_sub_clusters_access_profiles_list_ordered.rds")
+atac.sub.clust.tab <- readRDS( "../Input_sub/rds_ME49_59/atac_sub_clusters_access_profiles_list_ordered.rds")
 
 atac.sub.clust.plt <- c()
 atac.sub.clust.plt <- lapply(1:length(atac.sub.clust.tab), function(i){
@@ -746,11 +746,16 @@ pp <- grid.arrange(grobs = atac.sub.clust.plt, ncol = 4)
 
 ```{r}
 
-atac.peaks <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/atac_peaks.rds")
-peak.genes.cutRun <- readRDS("../Input_sub/toxo_cdc/cutNrun_revision/rds/Union_all_new_peaks_0.05_qval_NO_frag_filt_3Controls.rds")
+## overlap cut&run and atac genes fig 5 b 
+peak.genes.atac <- read.table("../Input_sub/rds_ME49_59/toxo_scATAC_MJ_ME49_59/peak_gene_assigned_final.bed")
+peak.genes.cutRun <- readRDS("../Input_sub/rds_ME49_59/cutNrun_revision/rds/Union_all_new_peaks_0.05_qval_NO_frag_filt_3Controls.rds")
 peak.genes.cutRun <- peak.genes.cutRun$peak.gene.merged.bed[1:7] 
 
 ovlp <- inner_join(peak.genes.cutRun, peak.genes.atac, by = c("gene_name" = "V7"))
+# venn.list <- list(atac.genes = unique(peak.genes.atac$V7),
+#                   cutRun.genes = unique(peak.genes.cutRun$gene_name))
+# ggVennDiagram(venn.list)
+library(VennDiagram)
 
 venn.plot <- draw.pairwise.venn(
   area1 =length(unique(peak.genes.cutRun$gene_name)),
@@ -768,7 +773,7 @@ venn.plot <- draw.pairwise.venn(
   
 )
 grid.draw(venn.plot)
-dev.off()
+
 
 ```
 
@@ -776,7 +781,7 @@ dev.off()
 
 ```{r}
 
-S.O.rna.WT <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.WT_labels.rds")
+S.O.rna.WT <- readRDS("../Input_sub/rds_ME49_59/S.O.rna.WT_labels.rds")
 Idents(S.O.rna.WT) <- "phase"
 
 umap.WT <- FetchData(object = S.O.rna.WT, vars = c("UMAP_1", "UMAP_2", "UMAP_3", "phase"))
@@ -789,7 +794,7 @@ plot_ly(umap.WT,
         size = 0.2)
 
 
-S.O.rna.KD <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
+S.O.rna.KD <- readRDS('../Input_sub/rds_ME49_59/S.O.rna.AP2XII8.KD.new_transferred_lables_bootroyed.rds')
 Idents(S.O.rna.KD) <- "phase"
 
 umap.KD <- FetchData(object = S.O.rna.KD, vars = c("UMAP_1", "UMAP_2", "UMAP_3", "phase", "seurat_clusters"))
@@ -808,7 +813,7 @@ plot_ly(umap.KD,
 
 
 ```{r}
-tab <- read.xlsx("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
+tab <- read.xlsx("../Input_sub/rds_ME49_59/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 
 dir.targets <- tab %>% filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based != "NA")
 dim(dir.targets)
@@ -838,9 +843,8 @@ p
 ## fig 6d
 ```{r}
 ## summary and bar plot
-# tab <- readRDS("../Input_sub/toxo_cdc/rds_ME49_59/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v8.rds")
 
-tab <- read.xlsx("../Input_sub/toxo_cdc/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
+tab <- read.xlsx("../Input_sub/rds_ME49_59/cutNrun_revision/rds/cut_run_union_new_peaks_march_motif_modulated_genes_lfs_v11_Streme_motif_revision.xlsx")
 HC.peaks <- tab %>% 
   filter(intersection_CutRun_dataSets == "yes" & KD_vs_WT_phase_based %in% c('down_reg', 'up_reg', 'modulated') ) %>% 
   dplyr::select(chr, start_peak, end_peak, V4, V5, V6,TGME49,intersection_CutRun_dataSets,
@@ -910,8 +914,7 @@ p
 
 ## number of genes with both motifs / 2
 
-#HC.peaks.clust <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/AP2XII8_ribosomal_direct_targets_41.rds')
-HC.peaks.clust <-  readRDS('../Input_sub/toxo_cdc/cutNrun_revision/rds/AP2XII8_ribosomal_direct_targets_46.rds')
+HC.peaks.clust <-  readRDS('../Input_sub/rds_ME49_59/cutNrun_revision/rds/AP2XII8_ribosomal_direct_targets_46.rds')
 HC.peaks.clust.rna <- HC.peaks.clust[HC.peaks.clust$data == "scRNA",]
 HC.peaks.clust.rna$cluster.RNA <- gsub("C 2", "C 1", gsub("C 3", "C 1", HC.peaks.clust.rna$cluster.RNA ))
 p <- plot_rna_atac_trends(HC.peaks.clust.rna) 
@@ -927,7 +930,7 @@ plot(p)
 
 ```{R}
 
-cyclic.genes <- readRDS('../Input_sub/toxo_cdc/rds_ME49_59/all_genes_cyclic_timing.rds')
+cyclic.genes <- readRDS('../Input_sub/rds_ME49_59/all_genes_cyclic_timing.rds')
 
 stats.cyclic.rna <- cyclic.genes %>% dplyr::filter(rna.expressed == 1, rna.cyclic == 1) 
 nrow(stats.cyclic.rna) # of cyclic-expr
