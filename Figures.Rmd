@@ -119,7 +119,7 @@ plot(p1)
 ```
 
 
-## fig 1C, - umap atac
+## fig 1C, - umap atac 
 ```{r}
 S.O.atac <- readRDS('../Input_sub/rds_ME49_59/S.O_intra_atac_lables_pt.rds')
 S.O.atac@meta.data$spp2 <- "atac"
