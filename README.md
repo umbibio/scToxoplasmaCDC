@@ -23,7 +23,7 @@ The code runs on a standard desktop/laptop computer with enough RMA (>16Gb). The
 Run time for most parts of the code is very short. Fitting Splines will take up to 1 hour. Multiple cores can be specified for faster run.
 
 ## Data availability
-The processed data is available [here](https://umbibio.math.umb.edu/toxosc/assets/public-data/preprocessed/rds_ME49_59.zip) and can be used to run the analysis pipeline smoothly and generate the figures in the paper. We suggest you save the rds folder in a sub folder called "Input_sub" within the same directory where the code is cloned. Alternatively, change the relative path in the code.
+The processed data is available [here](https://umbibio.math.umb.edu/data/toxosc/preprocessed/rds_ME49_59_v2.zip) and can be used to run the analysis pipeline smoothly and generate the figures in the paper. We suggest you save the rds folder in a sub folder called "Input_sub" within the same directory where the code is cloned. Alternatively, change the relative path in the code.
 
 Additional downloadable files related to this project are available [here](https://umbibio.math.umb.edu/toxosc/data).
 
